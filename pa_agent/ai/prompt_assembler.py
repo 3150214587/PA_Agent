@@ -1098,39 +1098,27 @@ class PromptAssembler:
         """Build Stage 1 as a continuation-based incremental update.
 
         Structure:
-          [0] system    — Stage 1 system prompt (same as full Stage 1)
-          [1] user      — Previous full Stage 1 user prompt (with K-line table)
-          [2] assistant — Previous Stage 1 reply
-          [3] user      — Incremental task (new K-lines only, no full table)
+          [0] system    - Stage 1 system prompt (same as full Stage 1)
+          [1] user      - FULL Stage 1 user prompt rebuilt from the CURRENT frame
+                          (complete re-indexed K-line table; K1 = newest closed bar)
+          [2] assistant - Previous Stage 1 reply (K-refs shifted by +new_bar_count)
+          [3] user      - Incremental task (new K-lines only, no full table)
 
-        Benefits vs old 2-message incremental:
-        - [system, user(S1)] prefix is IDENTICAL to full Stage 1 → prefix cache hit
-        - Full K-line table is in [1], not re-sent in [3] → saves ~14.5K tokens
-        - Stage 2 continuation can also cache-hit this prefix chain
+        Why [1] is rebuilt every round instead of reusing the previous record's
+        stored user message: the stored message freezes the K-line table at the
+        FIRST full analysis, so from the second incremental round onward the
+        model would see the initial snapshot plus only the newest bar, losing
+        every bar closed in between. Rebuilding costs the prefix cache hit but
+        guarantees the table the model reads always matches current reality and
+        the re-indexed coordinate system the incremental prompt describes.
         """
-        prev_s1_messages = getattr(previous_record, "stage1_messages", None) or []
         prev_s1_response = getattr(previous_record, "stage1_response", None) or {}
-
-        # Extract previous Stage 1 user message
-        prev_user_content = ""
-        for msg in prev_s1_messages:
-            if msg.get("role") == "user":
-                prev_user_content = msg["content"]
-                break
 
         # Extract previous Stage 1 assistant reply content
         prev_assistant_content = ""
         if isinstance(prev_s1_response, dict):
             prev_assistant_content = prev_s1_response.get("content", "") or ""
 
-        if not prev_user_content:
-            raise ValueError(
-                f"build_incremental_stage1: previous_record.stage1_messages "
-                f"contains no user message. "
-                f"stage1_messages has {len(prev_s1_messages)} items, "
-                f"roles={[m.get('role') for m in prev_s1_messages]}. "
-                f"record.meta: {getattr(previous_record, 'meta', '<missing>')!r}"
-            )
         prev_diag = getattr(previous_record, "stage1_diagnosis", None) or {}
         if not prev_assistant_content and not (
             isinstance(prev_diag, dict) and prev_diag
@@ -1149,7 +1137,7 @@ class PromptAssembler:
             shift_n=int(new_bar_count or 0),
         )
 
-        prev_user_content = self._inject_market_features_block(prev_user_content, frame)
+        current_user_content = self._build_stage1_user_prompt(frame, analysis_mode=analysis_mode)
 
         prev_reasoning = ""
         if isinstance(prev_s1_response, dict):
@@ -1183,7 +1171,7 @@ class PromptAssembler:
 
         return [
             {"role": "system",    "content": system_content},
-            {"role": "user",      "content": prev_user_content},
+            {"role": "user",      "content": current_user_content},
             assistant_turn,
             {"role": "user",      "content": incremental_user_content},
         ]

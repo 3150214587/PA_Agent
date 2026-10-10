@@ -47,13 +47,10 @@ python -m pa_agent.main
 
 > 如需隔离环境也可创建虚拟环境：`python -m venv .venv` 后激活再 `pip install -e .`。
 
-**安装内容**：PyQt6（GUI 框架）+ pyqtgraph（K 线图表绘图）+ numpy/pandas（数据处理）+ openai（AI API 客户端）+ **akshare/baostock（A 股数据源）** + json 校验、模型定义等全套依赖。
+**安装内容**：PyQt6（GUI 框架）+ pyqtgraph（K 线图表绘图）+ numpy/pandas（数据处理）+ openai（AI API 客户端）+ json 校验、模型定义等全套依赖。
 
 > 若需运行测试（pytest）或代码格式化（ruff/black），额外安装：`pip install -e ".[dev]"`。
 
-### uv 隔离环境（可选）
-
-项目也支持使用 [uv](https://docs.astral.sh/uv/) 进行环境隔离，依赖版本通过 `uv.lock` 锁定，保证可复现安装，且不会污染系统 Python。
 
 ```cmd
 # 1. 安装 uv（仅需一次）
