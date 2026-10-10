@@ -1,0 +1,5 @@
+{
+  "ok": false,
+  "error": "Client error '429 Too Many Requests' for url 'https://api.kilo.ai/api/gateway/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+  "elapsed_s": 2.5359522000071593
+}

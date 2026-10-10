@@ -1,0 +1,324 @@
+[兜底] stage1 的主接口调用未成功（原因：Injected primary network failure; free upstream remains real），已自动改用免费模型继续分析。
+[兜底] 这一步可能要等几分钟，界面会停在这里但程序在正常等待，不是卡死，请勿关闭窗口。
+[兜底] 正在等待免费模型 inclusionai/ling-3.1-flash 返回（第 1/6 个候选，单个最长约 120 秒，请勿关闭窗口）…
+[兜底] inclusionai/ling-3.1-flash 已返回，正在校验结果…
+{
+  "cycle_position": "spike",
+  "alternative_cycle_position": "micro_channel",
+  "direction": "bullish",
+  "diagnosis_confidence": 80,
+  "spike_stage": "active",
+  "climax_risk": "warning",
+  "market_phase": "stable",
+  "transition_risk": null,
+  "detected_patterns": [
+    "spike_candidate",
+    "spike_active",
+    "climax_warning",
+    "gap_bar",
+    "always_in"
+  ],
+  "key_signals": [
+    "近60根K线全部收阳且每根都创出新高，上涨结构极端连贯",
+    "每根K线相对前一根几乎不重叠，价格以约2个点的固定步长持续上推",
+    "程序显示已连续60根K线未触及EMA20，均线缺口棒（价格整根站在EMA上方）持续累积，属于极端强势但也意味着严重超买",
+    "K1以收盘价突破区间上沿，但属于尖峰中的连续突破，不是独立的新突破信号",
+    "连续强趋势棒过多，进入高潮预警：即使还没有出现长影线或小实体等衰竭信号，也禁止再追多"
+  ],
+  "htf_context": "长程背景窗口K60-K41与近期窗口K40-K1方向一致向上，三窗口同向共振；当前价格2119.8贴近近40根高点2120.0（上方阻力），下方结构支撑参考K40低点2039.8；大背景与近期方向不冲突，但尖峰已持续极久，后续更可能进入回撤整理或区间消化，深度回撤多数仍是上涨旗形而非反转。",
+  "entry_setup": "等待——尖峰进行中禁止追单（禁止尖峰追单/市价追突破），只观察是否出现第一次2-4根K线的回撤，并在回撤中出现顺大势的信号K线后再评估是否按尖峰回撤方式顺势入场；当前无合格信号棒。",
+  "support_levels": [
+    "2039.8",
+    "2039.8-2041.8"
+  ],
+  "resistance_levels": [
+    "2120.0",
+    "2120.0-2122.0"
+  ],
+  "strategy_files_needed": [
+    "极速上涨策略",
+    "极速上涨识别",
+    "通道策略"
+  ],
+  "risk_warning": "连续60根同向趋势棒且全程未回踩EMA20，属于极端超买状态；高潮预警已触发，禁止追多、禁止尖峰追单；任何逆势做空都违反硬禁令；尖峰后续常见路径是回撤后延续或转入区间，深度回撤不等于反转；程序显示区间高度测量目标仅作背景参考，当前突破非存活突破，不宜直接作为目标依据。",
+  "bar_analysis": {
+    "always_in": "long",
+    "last_closed_bar": "K1",
+    "bar_type": "trend_bull",
+    "signal_bar": {
+      "bar": null,
+      "quality": "invalid",
+      "reason": "当前没有独立信号棒：K1只是连续上涨序列中的一根顺势趋势棒，且尖峰进行中禁止追单，须等第一次回撤出现并收盘后才能确认信号棒。"
+    },
+    "entry_setup_type": "none",
+    "follow_through": "pending"
+  },
+  "bar_by_bar_summary": [
+    {
+      "bar": "K1",
+      "role": "confirmation",
+      "bar_type": "trend_bull",
+      "context_effect": "strengthens_bull",
+      "follow_through": "pending",
+      "trapped_side": "bears",
+      "reason": "再收一根实体大、影线短的多头趋势棒并创出新高2120.0，说明多头仍完全主导，但也让连续上涨序列进一步拉长，高潮风险继续累积。"
+    },
+    {
+      "bar": "K2",
+      "role": "confirmation",
+      "bar_type": "trend_bull",
+      "context_effect": "strengthens_bull",
+      "follow_through": "yes",
+      "trapped_side": "bears",
+      "reason": "顺势再创新高并被K1跟随，确认上涨未中断；连续同向棒过多，追多性价比持续下降。"
+    },
+    {
+      "bar": "K3",
+      "role": "confirmation",
+      "bar_type": "trend_bull",
+      "context_effect": "strengthens_bull",
+      "follow_through": "yes",
+      "trapped_side": "bears",
+      "reason": "又一根几乎无回撤的多头趋势棒，价格被快速推高，空头在该位置被套；这是尖峰中段特征而非新的入场信号。"
+    },
+    {
+      "bar": "K4",
+      "role": "confirmation",
+      "bar_type": "trend_bull",
+      "context_effect": "strengthens_bull",
+      "follow_through": "yes",
+      "trapped_side": "bears",
+      "reason": "延续固定步长上推，K线之间几乎不重叠，惯性极强；越往后越要警惕第一次衰竭信号出现。"
+    },
+    {
+      "bar": "K5",
+      "role": "confirmation",
+      "bar_type": "trend_bull",
+      "context_effect": "strengthens_bull",
+      "follow_through": "yes",
+      "trapped_side": "bears",
+      "reason": "同向趋势棒继续，多头控制盘面；连续强棒数量已远超6根高潮预警阈值，当前只适合等待回撤而非追涨。"
+    }
+  ],
+  "gate_trace": [
+    {
+      "node_id": "1.2",
+      "question": "是否能识别出当前市场周期？",
+      "answer": "是",
+      "reason": "连续60根实体大、影线短、几乎不重叠的多头趋势棒，EMA20快速上倾且价格远离均线，符合尖峰（强趋势突破序列）的识别标准。",
+      "branch": "spike",
+      "section": "周期频谱定位",
+      "bar_range": "K40-K1"
+    },
+    {
+      "node_id": "1.3",
+      "question": "当前市场是否极端混乱？",
+      "answer": "是",
+      "reason": "市场方向感极强而非混乱：K线几乎不重叠、影线极短、EMA明显上倾，不存在大量重叠与均线纠缠，因此不属于极端交易区间。",
+      "branch": "spike",
+      "section": "极端混乱检查",
+      "bar_range": "K20-K1"
+    },
+    {
+      "node_id": "2.1",
+      "question": "近期结构是否呈现明确惯性方向？",
+      "answer": "是",
+      "reason": "EMA上倾、近60根K线全部收阳且持续创新高，高点与低点同步上移，惯性方向明确。",
+      "branch": "bullish",
+      "section": "方向判断",
+      "bar_range": "K40-K1"
+    },
+    {
+      "node_id": "2.2",
+      "question": "长程大背景方向与近期方向的关系？",
+      "answer": "是",
+      "reason": "长程背景窗口K60-K41为多头，近期窗口K40-K1也为多头，两者同向共振，提高方向判断置信度。",
+      "branch": "aligned",
+      "section": "背景一致性",
+      "bar_range": "K60-K1"
+    },
+    {
+      "node_id": "2.5",
+      "question": "当前惯性强度是否足够支持趋势跟踪？",
+      "answer": "是",
+      "reason": "K线重叠极少、连续同向趋势棒占绝对多数、没有K线收盘到EMA另一侧，惯性足够强；但连续强棒已触发高潮预警，阶段二只允许等回撤后顺势入场，禁止追单。",
+      "branch": "bullish",
+      "section": "惯性强度",
+      "bar_range": "K8-K1"
+    }
+  ],
+  "gate_result": "proceed"
+}[兜底] inclusionai/ling-3.1-flash 已通过校验（用时 25.2 秒），本阶段由它完成，下面开始正常输出结果。
+[兜底] stage2 的主接口调用未成功（原因：Injected primary network failure; free upstream remains real），已自动改用免费模型继续分析。
+[兜底] 这一步可能要等几分钟，界面会停在这里但程序在正常等待，不是卡死，请勿关闭窗口。
+[兜底] 正在等待免费模型 inclusionai/ling-3.1-flash 返回（第 1/6 个候选，单个最长约 120 秒，请勿关闭窗口）…
+[兜底] inclusionai/ling-3.1-flash 失败：kilo/inclusionai/ling-3.1-flash: HTTP 429 rate limited（用时 1.7 秒），继续尝试下一个候选…
+[兜底] 正在等待免费模型 nvidia/nemotron-3.5-lightning:free 返回（第 2/6 个候选，单个最长约 120 秒，请勿关闭窗口）…
+[兜底] nvidia/nemotron-3.5-lightning:free 已返回，正在校验结果…
+[兜底] nvidia/nemotron-3.5-lightning:free 返回内容未通过校验：1 schema error(s): 'wait' is not one of ['是', '否', '中性', '等待', '不适用']（用时 28.0 秒），继续尝试下一个候选…
+[兜底] 正在等待免费模型 kilo-auto/free 返回（第 3/6 个候选，单个最长约 120 秒，请勿关闭窗口）…
+[兜底] kilo-auto/free 已返回，正在校验结果…
+{
+  "decision": {
+    "order_direction": null,
+    "order_type": "不下单",
+    "entry_price": null,
+    "entry_basis_bar": null,
+    "entry_basis_extreme": null,
+    "entry_rule": null,
+    "take_profit_price": null,
+    "take_profit_price_2": null,
+    "stop_loss_price": null,
+    "reasoning": "当前处于尖峰进行中且高潮预警状态，连续60根阳线无回撤，严重超买。硬性禁止追高（SCS），须等待首次2-4根K线回撤出现顺势信号棒（SPS）后再评估。当前无回撤、无信号棒、无结构支撑位可挂限价单，故不下单，等待回撤机会。",
+    "diagnosis_confidence": 80,
+    "diagnosis_confidence_reasoning": "周期位置明确为尖峰，三窗口同向共振，K线特征完全符合尖峰定义；但连续60根未触EMA属于极端延伸，后续演变存在不确定性，扣分20分。",
+    "trade_confidence": 10,
+    "trade_confidence_reasoning": "无任何入场结构（无回撤、无信号棒、无支撑位），硬性规则禁止追尖峰，交易把握极低，唯一正确动作是等待。",
+    "estimated_win_rate": null,
+    "estimated_win_rate_reasoning": null,
+    "key_factors": [
+      "spike_active",
+      "climax_warning",
+      "always_in_long",
+      "no_pullback_yet",
+      "no_signal_bar",
+      "hard_rule_no_chase_spike"
+    ],
+    "watch_points": [
+      "等待首次回撤（2-4根K线）出现",
+      "回撤中出现多头信号棒（收盘接近高点、实体大、下影线短）",
+      "回撤幅度在38%-50%或至EMA20/前低附近时评估SPS入场",
+      "若回撤超过61.8%尖峰高度则警惕转入宽通道/区间，调整策略",
+      "严禁在尖峰中追多或逆势做空"
+    ],
+    "risk_assessment": "极端超买，连续60根未触EMA20，高潮风险高，追单极大概率被套；深度回撤多数为旗形整理而非反转，不得逆势。",
+    "invalidation_condition": "无（当前无持仓方案）"
+  },
+  "diagnosis_summary": {
+    "cycle_position": "spike",
+    "direction": "bullish",
+    "key_signals": [
+      "连续60根多头趋势棒，实体重叠极小，典型尖峰",
+      "EMA20快速上倾，价格远离均线，60根均线缺口棒累积",
+      "高潮预警触发（连续强棒>6根），禁止追单",
+      "当前价格贴近近期高点2120.0，无回撤空间"
+    ]
+  },
+  "bar_analysis": {
+    "always_in": "long",
+    "last_closed_bar": "K1",
+    "bar_type": "trend_bull",
+    "signal_bar": {
+      "bar": null,
+      "quality": "invalid",
+      "pattern": "none",
+      "reason": "K1为连续上涨序列中的顺势趋势棒，非回撤信号棒；尖峰进行中禁止追单，须等回撤后确认信号棒。"
+    },
+    "entry_bar": {
+      "strength": "not_triggered",
+      "follow_through": false,
+      "still_valid": false,
+      "freshness": "invalid"
+    },
+    "second_entry": {
+      "is_second_entry": false,
+      "type": "none"
+    }
+  },
+  "decision_trace": [
+    {
+      "node_id": "3.1",
+      "section": "极速行情",
+      "question": "是否满足尖峰条件？",
+      "answer": "是",
+      "reason": "连续60根大型多头趋势棒，实体重叠<5%，收盘持续创新高，EMA20快速上倾且价格远离均线，符合标准尖峰定义（spike_stage=active）。",
+      "branch": "spike",
+      "skipped": false,
+      "bar_range": "K40-K1"
+    },
+    {
+      "node_id": "3.2",
+      "section": "极速行情",
+      "question": "尖峰是否仍在进行中？",
+      "answer": "是",
+      "reason": "K1仍为大实体多头趋势棒创新高，无暂停棒、回撤棒或衰竭信号出现，尖峰结构完好延续中。",
+      "branch": "active",
+      "skipped": false,
+      "bar_range": "K1"
+    },
+    {
+      "node_id": "3.3",
+      "section": "极速行情",
+      "question": "尖峰进行中是否允许追单（SCS）？",
+      "answer": "否",
+      "reason": "硬性禁令：尖峰进行中禁止SCS/市价追突破/追高潮；climax_risk=warning时严禁追原方向。仅允许SPS回撤入场或尖峰旗形顺向突破。",
+      "branch": "prohibited",
+      "skipped": false,
+      "bar_range": "K1"
+    },
+    {
+      "node_id": "3.4",
+      "section": "极速行情",
+      "question": "尖峰是否出现第一次暂停或回撤？",
+      "answer": "否",
+      "reason": "K1-K5连续为强多头趋势棒，无回撤棒、暂停棒、十字星或内包棒出现，尖峰未见第一次暂停。",
+      "branch": "no_pullback",
+      "skipped": false,
+      "bar_range": "K5-K1"
+    },
+    {
+      "node_id": "9.0",
+      "section": "入场信号",
+      "question": "信号棒是否已经收盘且质量足够？",
+      "answer": "否",
+      "reason": "当前无独立信号棒：K1为尖峰延续棒，非回撤后的信号棒；尖峰规则要求回撤2-4根K线后出现顺势信号棒才可入场。",
+      "branch": "no_signal",
+      "skipped": false,
+      "bar_range": "K1"
+    },
+    {
+      "node_id": "9.0P",
+      "section": "入场信号",
+      "question": "背景驱动限价单是否可行？",
+      "answer": "否",
+      "reason": "尖峰进行中无回撤结构，价格处于极端高位(2120.0)，下方最近支撑2039.8距离过远(80点约36ATR)，无结构锚点(趋势线/EMA/前低)可挂限价单；SPS要求回撤到位后才评估，当前不满足。",
+      "branch": "no_structure_anchor",
+      "skipped": false,
+      "bar_range": "K1"
+    },
+    {
+      "node_id": "14",
+      "section": "禁止行为",
+      "question": "是否触犯禁止行为清单？",
+      "answer": "否",
+      "reason": "扫描§14：①未逆势(方向多单且AIL) ②未追高潮(明确不下单) ③未在尖峰中追单(SCS禁止已遵守) ④未在区间中部交易 ⑤未用固定跳数止损 ⑥未输出仓位管理 ⑦未依赖成交量 ⑧无极端TR强行交易 ⑨未末端三推追单 ⑩未止损后反手。均未触犯。",
+      "skipped": false,
+      "bar_range": "K1"
+    }
+  ],
+  "terminal": {
+    "node_id": "9.0P",
+    "outcome": "wait",
+    "label": "等待尖峰回撤SPS机会"
+  },
+  "next_cycle_prediction": {
+    "cycle": "broad_channel",
+    "direction": "bullish",
+    "probabilities": {
+      "spike": 5,
+      "micro_channel": 5,
+      "tight_channel": 5,
+      "normal_channel": 15,
+      "broad_channel": 30,
+      "trending_tr": 20,
+      "trading_range": 15,
+      "extreme_tr": 5
+    },
+    "reasoning": "当前尖峰已极度延伸(60根K线未触EMA)，动能严重透支。最可能路径：深度回撤(50%+)形成宽通道/台阶或趋势型交易区间消化获利盘(约50%概率)；次可能：浅回撤后恢复常规通道延续(约20%)；小概率直接进入横盘交易区间(约15%)或尖峰二次加速(约5%)；粘性反转概率约15-20%(含在trading_range/broad_channel中)。方向偏多(回撤买入)，但需待结构确认。",
+    "unpredictable": false,
+    "features_used": [
+      "stage1_diagnosis",
+      "kline_features"
+    ]
+  }
+}[兜底] kilo-auto/free 已通过校验（用时 78.5 秒），本阶段由它完成，下面开始正常输出结果。

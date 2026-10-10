@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "analysis_complete": true,
+  "stage2_model_called": true,
+  "events": [
+    "Stage1Started",
+    "Stage1Done",
+    "Stage2Started",
+    "Stage2Done",
+    "RecordSaved"
+  ],
+  "exception": null,
+  "fallback_hints_shown": 8,
+  "fallback_hint_bytes": 366,
+  "elapsed_s": 91.76600000000326,
+  "note": "Production prompts/validator/writer; synthetic bars; injected primary failure; REAL free upstream. A legitimate wait is not a product failure."
+}

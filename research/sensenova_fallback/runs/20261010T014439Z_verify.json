@@ -1,0 +1,53 @@
+{
+  "root": "D:\\cl\\PA_Agent",
+  "script": "D:\\cl\\PA_Agent\\research\\sensenova_fallback\\verify_free_fallback.py",
+  "live": false,
+  "analysis_success": false,
+  "smoke_only": false,
+  "checks": {
+    "gate": {
+      "ok": true,
+      "cases": {
+        "exact": true,
+        "slash": true,
+        "case": true,
+        "deepseek": false,
+        "normalized": "https://token.sensenova.cn/v1"
+      }
+    },
+    "key_isolation": {
+      "ok": true,
+      "leaks": [],
+      "user_agent": "PA-Agent/sensenova-fallback",
+      "request": {
+        "url": "https://api.kilo.ai/api/gateway/chat/completions",
+        "headers": {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "user-agent": "PA-Agent/sensenova-fallback"
+        },
+        "body": {
+          "model": "inclusionai/ling-3.1-flash",
+          "messages": [
+            {
+              "role": "user",
+              "content": "synthetic"
+            }
+          ],
+          "max_tokens": 8192,
+          "stream": false
+        },
+        "timeout": 120.0
+      }
+    },
+    "candidates_offline": {
+      "ok": true,
+      "models": [
+        "inclusionai/ling-3.1-flash",
+        "nvidia/nemotron-3.5-lightning:free",
+        "kilo-auto/free"
+      ]
+    }
+  },
+  "ok": true
+}

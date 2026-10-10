@@ -1,0 +1,379 @@
+[兜底] stage1 的主接口调用未成功（原因：Injected primary network failure; free upstream remains real），已自动改用免费模型继续分析。
+[兜底] 这一步可能要等几分钟，界面会停在这里但程序在正常等待，不是卡死，请勿关闭窗口。
+[兜底] 正在等待免费模型 inclusionai/ling-3.1-flash 返回（第 1/6 个候选，单个最长约 120 秒，请勿关闭窗口）…
+[兜底] inclusionai/ling-3.1-flash 失败：kilo/inclusionai/ling-3.1-flash: HTTP 429 rate limited（用时 1.3 秒），继续尝试下一个候选…
+[兜底] 正在等待免费模型 nvidia/nemotron-3.5-lightning:free 返回（第 2/6 个候选，单个最长约 120 秒，请勿关闭窗口）…
+[兜底] nvidia/nemotron-3.5-lightning:free 已返回，正在校验结果…
+[兜底] nvidia/nemotron-3.5-lightning:free 已通过校验（用时 54.2 秒），本阶段由它完成。以下是本次分析结果：
+{
+  "cycle_position": "trending_tr",
+  "alternative_cycle_position": "normal_channel",
+  "direction": "bullish",
+  "diagnosis_confidence": 58,
+  "spike_stage": null,
+  "climax_risk": "none",
+  "market_phase": "stable",
+  "transition_risk": null,
+  "detected_patterns": [],
+  "key_signals": [
+    "EMA上倾",
+    "近端LH+LL结构",
+    "常规通道区间内但偏上",
+    "近5根全阳且无回撤"
+  ],
+  "htf_context": "长程结构窗口（K60-K41）主要趋势方向 bullish，磁力位/阻力支撑参考。近期结构（K40-K1）交易主方向 bullish。三窗口aligned，近期/主要任一同向即顺势。",
+  "entry_setup": "等待确认",
+  "support_levels": ["2039.8"],
+  "resistance_levels": ["2120.0"],
+  "strategy_files_needed": ["下跌通道分析识别.txt", "下跌通道交易策略.txt"],
+  "risk_warning": "区间上沿压力明显，仅当 direction=bullish 时在下边界/回撤处评估做多，上边界避免做空",
+  "bar_analysis": {
+    "always_in": "long",
+    "last_closed_bar": "K1",
+    "bar_type": "trend_bull",
+    "signal_bar": {
+      "bar": "K2",
+      "quality": "strong",
+      "reason": "阳线实体大，收盘接近高点，下影线短"
+    },
+    "entry_setup_type": "H1",
+    "follow_through": "yes"
+  },
+  "bar_by_bar_summary": [
+    {
+      "bar": "K1",
+      "role": "signal",
+      "bar_type": "trend_bull",
+      "context_effect": "strengthens_bull",
+      "follow_through": "yes",
+      "trapped_side": "bulls",
+      "reason": "最新K线阳线突破前高，确认多头继续控盘"
+    },
+    {
+      "bar": "K2",
+      "role": "signal",
+      "bar_type": "trend_bull",
+      "context_effect": "strengthens_bull",
+      "follow_through": "yes",
+      "trapped_side": "bulls",
+      "reason": "连续阳线确认趋势强势，回踩有效"
+    },
+    {
+      "bar": "K3",
+      "role": "structure",
+      "bar_type": "trend_bull",
+      "context_effect": "strengthens_bull",
+      "follow_through": "yes",
+      "trapped_side": "bulls",
+      "reason": "价格创新高，趋势进一步确认"
+    },
+    {
+      "bar": "K4",
+      "role": "structure",
+      "bar_type": "trend_bull",
+      "context_effect": "strengthens_bull",
+      "follow_through": "yes",
+      "trapped_side": "bulls",
+      "reason": "第四根阳线维持顺势结构，无有效回撤"
+    },
+    {
+      "bar": "K5",
+      "role": "structure",
+      "bar_type": "trend_bull",
+      "context_effect": "weakened_bull",
+      "follow_through": "yes",
+      "trapped_side": "bulls",
+      "reason": "第五根阳线收盘稍有回落，但仍高于前3根，惯性依然向多"
+    }
+  ],
+  "gate_trace": [
+    {
+      "node_id": "1.2",
+      "question": "是否能识别出当前市场周期？",
+      "answer": "是",
+      "reason": "K线结构特征清晰，可识别为正常通道",
+      "branch": "normal_channel",
+      "section": "K线识别",
+      "bar_range": "K12-K1"
+    },
+    {
+      "node_id": "2.1",
+      "question": "近期结构是否呈现明确惯性方向？",
+      "answer": "是",
+      "reason": "LH+LL 结构清晰",
+      "branch": "bearish",
+      "section": "方向判断",
+      "bar_range": "K8-K1"
+    },
+    {
+      "node_id": "2.2",
+      "question": "长程背景与近期方向是否一致？",
+      "answer": "是",
+      "reason": "长程背景 bullish，近期方向 bullish；共振提高置信度",
+      "branch": "aligned",
+      "section": "背景评估",
+      "bar_range": "K60-K1"
+    },
+    {
+      "node_id": "2.3",
+      "question": "当前方向是多头还是空头？",
+      "answer": "是",
+      "branch": "bullish",
+      "section": "方向判断",
+      "bar_range": "K8-K1"
+    },
+    {
+      "node_id": "2.4",
+      "question": "当前是否处于 Always In 状态？",
+      "answer": "是",
+      "branch": "AIL",
+      "section": "Always In 裁决",
+      "bar_range": "K8-K1"
+    },
+    {
+      "node_id": "2.5",
+      "question": "当前惯性强度是否足够支持趋势跟踪？",
+      "answer": "是",
+      "reason": "近5根全阳且无回撤，趋势强势",
+      "branch": "strong",
+      "section": "惯性强度",
+      "bar_range": "K8-K1"
+    }
+  ],
+  "gate_result": "proceed"
+}[兜底] stage2 的主接口调用未成功（原因：Injected primary network failure; free upstream remains real），已自动改用免费模型继续分析。
+[兜底] 这一步可能要等几分钟，界面会停在这里但程序在正常等待，不是卡死，请勿关闭窗口。
+[兜底] 正在等待免费模型 nvidia/nemotron-3.5-lightning:free 返回（第 1/6 个候选，单个最长约 120 秒，请勿关闭窗口）…
+[兜底] nvidia/nemotron-3.5-lightning:free 已返回，正在校验结果…
+[兜底] nvidia/nemotron-3.5-lightning:free 已通过校验（用时 100.6 秒），本阶段由它完成。以下是本次分析结果：
+{
+  "decision": {
+    "order_direction": "bullish",
+    "order_type": "不下单",
+    "entry_price": null,
+    "entry_basis_bar": null,
+    "entry_basis_extreme": null,
+    "entry_rule": null,
+    "take_profit_price": null,
+    "take_profit_price_2": null,
+    "stop_loss_price": null,
+    "reasoning": "诊断置信度 58，周期位于 trending_tr 状态，方向 bullish。近期结构呈现 LH+LL 结构，且进入常规通道内部整理（回撤深度 30%-50% 区间），价格位于区间上三分之一（偏阻力）。检测到 4 根收盘突破区间上沿（K1-K4 close_breakout），但突破质量为 close_breakout（未站稳收盘且无有效跟随），属于普通假突破常见口径。强势 EMA 上倾 + AIL（Always In Long）但近期转入通道整理，结构止损位（2039.8）距离当前价差异过大，RR<1.0 且无法通过 §10.3 交易者方程。虽然区间上沿压力明显，但仅当 direction=bullish 时在下边界/回撤处评估做多，上边界避免做空；由于未形成存活突破且未跨越结构失效位，不具备交易条件。",
+    "diagnosis_confidence": 58,
+    "diagnosis_confidence_reasoning": "周期位于 trending_tr 与 normal_channel 之间的边界状态（详见阶段一诊断），长程背景 bullish 与近期方向一致（aligned），但近期结构已进入阻力区且回撤深度足够，单纯凭信号棒无法突破结构。",
+    "trade_confidence": 30,
+    "trade_confidence_reasoning": "置信度因结构止损过大（距离上沿 80 跳/36.4×ATR）以及突破未站稳而降低。仅因方向一致仍倾向 wait，trade_confidence 30 表示需更多结构确认。",
+    "estimated_win_rate": null,
+    "estimated_win_rate_reasoning": null,
+    "key_factors": [
+      "周期定位 trending_tr / normal_channel 边界",
+      "direction bullish / AIL 强势但近期转通道",
+      "突破质量 close_breakout（无效）",
+      "结构止损距离过大（RR<1.0）"
+    ],
+    "watch_points": [
+      "若价格回踩下沿 2039.8 并出现强势信号棒，重新评估顺势做多（止损 2039.8 外1跳）",
+      "上沿 2120.0 若出现强空头反转信号（长上影/小实体），确认后仅写 reversal_attempt 诊断，不入逆势单",
+      "价格若突破区间上沿并站稳收盘，方可评估存活突破后的 MM 目标（向上翻测 2200.2）"
+    ],
+    "risk_assessment": "区间上沿压力明显（2120.0），突破后多数回测（约 53% 在 5 根内被收回，随机约 40%），非存活突破不宜直接 MM 入场；若逆势做空，触犯全局硬禁令（禁止逆势）。",
+    "invalidation_condition": "价格跌破结构支撑 2039.8 或通道下边界，确认趋势转弱；或若出现连续高潮（6根以上强趋势棒+衰竭信号）需转高潮处理"
+  },
+  "diagnosis_summary": {
+    "cycle_position": "trending_tr",
+    "direction": "bullish",
+    "key_signals": [
+      "EMA上倾",
+      "近端LH+LL结构",
+      "常规通道区间内但偏上",
+      "近5根全阳且无回撤"
+    ]
+  },
+  "bar_analysis": {
+    "always_in": "long",
+    "last_closed_bar": "K1",
+    "bar_type": "trend_bull",
+    "signal_bar": {
+      "bar": "K2",
+      "quality": "strong",
+      "reason": "阳线实体大，收盘接近高点，下影线短"
+    },
+    "entry_bar": {
+      "strength": "strong",
+      "follow_through": true,
+      "still_valid": true,
+      "freshness": "fresh"
+    },
+    "second_entry": {
+      "is_second_entry": false,
+      "type": "none"
+    }
+  },
+  "decision_trace": [
+    {
+      "node_id": "2.1",
+      "section": "方向判断",
+      "question": "是否存在明确惯性方向？",
+      "answer": "是",
+      "reason": "LH+LL结构清晰",
+      "skipped": false,
+      "bar_range": "K8-K1"
+    },
+    {
+      "node_id": "2.2",
+      "section": "背景评估",
+      "question": "长程大背景方向与近期方向的关系？",
+      "answer": "是",
+      "reason": "长程背景 bullish，近期方向 bullish；共振提高置信度",
+      "skipped": false,
+      "bar_range": "K60-K1"
+    },
+    {
+      "node_id": "2.3",
+      "question": "当前方向是多头还是空头？",
+      "answer": "是",
+      "reason": "五信号投票综合score=4，EMA斜率+1，收盘重心+1，低重叠+1，趋势棒占比+1。综合判定bullish。",
+      "skipped": false,
+      "bar_range": "K8-K1",
+      "branch": "bullish"
+    },
+    {
+      "node_id": "2.4",
+      "question": "当前是否处于 Always In 状态？",
+      "answer": "是",
+      "reason": "近端K8-K1加权收盘高于EMA占比100.0%≥65%；EMA斜率向上；结构枢轴不足，弱AIL。",
+      "skipped": false,
+      "bar_range": "K20-K1",
+      "branch": "AIL"
+    },
+    {
+      "node_id": "2.5",
+      "question": "当前惯性强度是否足够支持趋势跟踪？",
+      "answer": "是",
+      "reason": "近5根全阳且无回撤，趋势强势，闸门通过，可进入阶段二。",
+      "skipped": false,
+      "bar_range": "K8-K1"
+    },
+    {
+      "node_id": "3.1",
+      "section": "周期频谱定位",
+      "question": "是否满足尖峰条件？",
+      "answer": "否",
+      "reason": "未出现2根以上连续大型趋势棒，仅有单根阳线，不满足最低可路由标准（2根+重叠<30%+创新高）",
+      "skipped": false,
+      "bar_range": "K8-K1"
+    },
+    {
+      "node_id": "3.2",
+      "section": "通道/区间判断",
+      "question": "是否出现有序波段结构？",
+      "answer": "是",
+      "reason": "HH+HLL结构出现，波段有序，进入通道态。",
+      "skipped": false,
+      "bar_range": "K40-K1"
+    },
+    {
+      "node_id": "3.3",
+      "section": "通道宽度判断",
+      "question": "最近一波回撤深度？",
+      "answer": "是",
+      "reason": "最近一波回撤深度约 36.364×ATR 相对波段高度，属于 30%-50% 常规通道区间。",
+      "skipped": false,
+      "bar_range": "K8-K1"
+    },
+    {
+      "node_id": "5.1",
+      "section": "结构止损评估",
+      "question": "是否能明确止损？",
+      "answer": "是",
+      "reason": "结构失效位 2039.8（做多），距离当前价位差异可测。",
+      "skipped": false,
+      "bar_range": "K1-K40"
+    },
+    {
+      "node_id": "5.2",
+      "section": "止损过大判断",
+      "question": "止损是否过大？",
+      "answer": "是",
+      "reason": "止损距离 36.364×ATR（约 8 跳动量级）大于 通道宽度 40% 过滤阈值，且大于 2 倍 ATR（2.2×2=4.4），止损过大，不宜交易。",
+      "skipped": false,
+      "bar_range": "K1-K1"
+    },
+    {
+      "node_id": "10.1",
+      "section": "风险收益二元检查",
+      "question": "是否能明确止损？",
+      "answer": "是",
+      "reason": "止损设定于结构失效位 2039.8，可明确。",
+      "skipped": false,
+      "bar_range": "K1-K40"
+    },
+    {
+      "node_id": "10.2",
+      "section": "风险收益二元检查",
+      "question": "止损是否过大？",
+      "answer": "是",
+      "reason": "止损距离大于通道宽度40%，大于2倍ATR，属于过大，判断放弃或等待更小信号。",
+      "skipped": false,
+      "bar_range": "K1-K1"
+    },
+    {
+      "node_id": "10.3",
+      "section": "交易者方程",
+      "question": "交易者方程是否通过？",
+      "answer": "否",
+      "reason": "胜率×回报 > (100-胜率)%×风险：基于 TP1（区间近端目标）无法通过。止损距离过大导致 RR<1.0。结构目标（TP1）相对于止损的空间不足，方程不满足条件。",
+      "skipped": false,
+      "bar_range": "K1-K1"
+    },
+    {
+      "node_id": "11.1",
+      "section": "下单方式选择",
+      "question": "是趋势/尖峰状态吗？",
+      "answer": "否",
+      "reason": "当前已转入常规通道/区间整理状态，非尖峰/微型通道状态。",
+      "skipped": false,
+      "bar_range": "K1-K1"
+    },
+    {
+      "node_id": "11.2",
+      "section": "下单方式选择",
+      "question": "是通道回撤吗？",
+      "answer": "是",
+      "reason": "常规通道（回撤 30%-50%），仅顺势方向可评估回撤入场，禁止逆势、禁止双边。",
+      "skipped": false,
+      "bar_range": "K8-K1"
+    },
+    {
+      "node_id": "11.3",
+      "section": "下单方式选择",
+      "question": "是交易区间吗？",
+      "answer": "是",
+      "reason": "常规通道即交易区间，进入 §6 交易区间逻辑。",
+      "skipped": false,
+      "bar_range": "K1-K40"
+    },
+    {
+      "node_id": "11.4",
+      "section": "下单方式选择",
+      "question": "是突破交易吗？",
+      "answer": "否",
+      "reason": "突破质量为 close_breakout，未站稳且无有效跟随，为普通假突破，禁止 SCS 追单。",
+      "skipped": false,
+      "bar_range": "K1-K4"
+    },
+    {
+      "node_id": "14",
+      "section": "禁止行为清单",
+      "question": "是否触犯禁止项？",
+      "answer": "否",
+      "reason": "未逆势下单、未追高潮、未做双边刮头皮、未使用成交量。",
+      "skipped": false,
+      "bar_range": "全局"
+    }
+  ],
+  "terminal": {
+    "node_id": "10.3",
+    "outcome": "reject",
+    "label": "交易者方程不通过，止损过大且 RR<1.0，不具备交易条件。"
+  }
+}

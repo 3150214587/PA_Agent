@@ -1,0 +1,136 @@
+{
+  "root": "D:\\cl\\PA_Agent",
+  "script": "D:\\cl\\PA_Agent\\research\\sensenova_fallback\\verify_free_fallback.py",
+  "live": true,
+  "analysis_success": false,
+  "smoke_only": true,
+  "checks": {
+    "gate": {
+      "ok": true,
+      "cases": {
+        "exact": true,
+        "slash": true,
+        "case": true,
+        "deepseek": false,
+        "normalized": "https://token.sensenova.cn/v1"
+      }
+    },
+    "key_isolation": {
+      "ok": true,
+      "leaks": [],
+      "user_agent": "PA-Agent/sensenova-fallback",
+      "request": {
+        "url": "https://api.kilo.ai/api/gateway/chat/completions",
+        "headers": {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "user-agent": "PA-Agent/sensenova-fallback"
+        },
+        "body": {
+          "model": "inclusionai/ling-3.1-flash",
+          "messages": [
+            {
+              "role": "user",
+              "content": "synthetic"
+            }
+          ],
+          "max_tokens": 8192,
+          "stream": false,
+          "reasoning": {
+            "enabled": false
+          }
+        },
+        "timeout": 120.0
+      }
+    },
+    "candidates_offline": {
+      "ok": true,
+      "models": [
+        "inclusionai/ling-3.1-flash",
+        "nvidia/nemotron-3.5-lightning:free",
+        "kilo-auto/free"
+      ]
+    },
+    "kilo_live_smoke": {
+      "mode": "smoke",
+      "note": "Connectivity smoke only — not full PromptAssembler/JsonValidator/TwoStageOrchestrator analysis success",
+      "free_count": 16,
+      "candidate_order": [
+        "inclusionai/ling-3.1-flash",
+        "nvidia/nemotron-3.5-lightning:free",
+        "kilo-auto/free",
+        "stepfun/step-5-preview-free",
+        "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "dots-studio/dots-3-note-preview:free",
+        "poolside/laguna-s-2.1:free",
+        "stealth/glyph-cluster"
+      ],
+      "ok": true,
+      "step": "chat_smoke",
+      "provider": "kilo",
+      "model": "nvidia/nemotron-3.5-lightning:free",
+      "elapsed_s": 1.9059999999881256,
+      "attempts": [
+        {
+          "model": "inclusionai/ling-3.1-flash",
+          "ok": false,
+          "error": "kilo/inclusionai/ling-3.1-flash: HTTP 429 rate limited",
+          "request": {
+            "model": "inclusionai/ling-3.1-flash",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Synthetic connectivity smoke only. Return ONLY JSON: {\"status\":\"ok\",\"sum\":7}"
+              }
+            ],
+            "max_tokens": 256,
+            "stream": false
+          }
+        },
+        {
+          "model": "nvidia/nemotron-3.5-lightning:free",
+          "ok": true,
+          "request": {
+            "model": "nvidia/nemotron-3.5-lightning:free",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Synthetic connectivity smoke only. Return ONLY JSON: {\"status\":\"ok\",\"sum\":7}"
+              }
+            ],
+            "max_tokens": 256,
+            "stream": false
+          },
+          "response": {
+            "content": "{\"status\":\"ok\",\"sum\":7}",
+            "reasoning_content": "",
+            "raw": {
+              "id": "gen-1791622832-zTS0G0L3wBfuIKYfTCtS",
+              "model": "nvidia/nemotron-3.5-lightning:free",
+              "content": "{\"status\":\"ok\",\"sum\":7}",
+              "reasoning_content": "",
+              "finish_reason": "stop",
+              "usage": {
+                "prompt_tokens": 35,
+                "completion_tokens": 10,
+                "total_tokens": 45,
+                "cost": 0
+              },
+              "latency_ms": 639.999999984866,
+              "fallback_provider": "kilo",
+              "fallback_model": "nvidia/nemotron-3.5-lightning:free",
+              "fallback_base_url": "https://api.kilo.ai/api/gateway"
+            },
+            "latency_ms": 639.999999984866
+          },
+          "parsed": {
+            "status": "ok",
+            "sum": 7
+          },
+          "parse_error": ""
+        }
+      ]
+    }
+  },
+  "ok": true
+}

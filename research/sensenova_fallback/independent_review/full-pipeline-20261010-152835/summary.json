@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "stage2_model_called": true,
+  "events": [
+    "Stage1Started",
+    "Stage1Done",
+    "Stage2Started",
+    "Stage2Done",
+    "RecordSaved"
+  ],
+  "exception": null,
+  "elapsed_s": 93.27092000000994,
+  "note": "Production prompts/validation/record writer, synthetic fixture bars, injected primary failure, real free upstream"
+}

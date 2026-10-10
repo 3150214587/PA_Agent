@@ -1,0 +1,2578 @@
+FFFF.sssF...F...FFFF...F....                                             [100%]
+================================== FAILURES ===================================
+_____________________________ test_live_stock_1h ______________________________
+
+self = <urllib3.connectionpool.HTTPSConnectionPool object at 0x000001632EA22060>
+method = 'GET'
+url = '/api/qt/stock/kline/get?fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989&klt=60&fqt=1&secid=0.000001&beg=0&end=20500000'
+body = None
+headers = {'User-Agent': 'python-requests/2.33.1', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive'}
+retries = Retry(total=0, connect=None, read=False, redirect=None, status=None)
+redirect = False, assert_same_host = False
+timeout = Timeout(connect=15, read=15, total=None), pool_timeout = None
+release_conn = False, chunked = False, body_pos = None, preload_content = False
+decode_content = False, response_kw = {}
+parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/api/qt/stock/kline/get', query='fields1=f1%2Cf2%2Cf3%2Cf4%2Cf...8%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989&klt=60&fqt=1&secid=0.000001&beg=0&end=20500000', fragment=None)
+destination_scheme = None, conn = None, release_this_conn = True
+http_tunnel_required = False, err = None, clean_exit = False
+
+    def urlopen(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | bool | int | None = None,
+        redirect: bool = True,
+        assert_same_host: bool = True,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        pool_timeout: int | None = None,
+        release_conn: bool | None = None,
+        chunked: bool = False,
+        body_pos: _TYPE_BODY_POSITION | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        **response_kw: typing.Any,
+    ) -> BaseHTTPResponse:
+        """
+        Get a connection from the pool and perform an HTTP request. This is the
+        lowest level call for making a request, so you'll need to specify all
+        the raw details.
+    
+        .. note::
+    
+           More commonly, it's appropriate to use a convenience method
+           such as :meth:`request`.
+    
+        .. note::
+    
+           `release_conn` will only behave as expected if
+           `preload_content=False` because we want to make
+           `preload_content=False` the default behaviour someday soon without
+           breaking backwards compatibility.
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param redirect:
+            If True, automatically handle redirects (status codes 301, 302,
+            303, 307, 308). Each redirect counts as a retry. Disabling retries
+            will disable redirect, too.
+    
+        :param assert_same_host:
+            If ``True``, will make sure that the host of the pool requests is
+            consistent else will raise HostChangedError. When ``False``, you can
+            use the pool on an HTTP proxy and request foreign hosts.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param pool_timeout:
+            If set and the pool is set to block=True, then this method will
+            block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+            connection is available within the time period.
+    
+        :param bool preload_content:
+            If True, the response's body will be preloaded into memory.
+    
+        :param bool decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param release_conn:
+            If False, then the urlopen call will not release the connection
+            back into the pool once a response is received (but will release if
+            you read the entire contents of the response such as when
+            `preload_content=True`). This is useful if you're not preloading
+            the response's content immediately. You will need to call
+            ``r.release_conn()`` on the response ``r`` to return the connection
+            back into the pool. If None, it takes the value of ``preload_content``
+            which defaults to ``True``.
+    
+        :param bool chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param int body_pos:
+            Position to seek to in file-like body in the event of a retry or
+            redirect. Typically this won't need to be set because urllib3 will
+            auto-populate the value when needed.
+        """
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+    
+        if headers is None:
+            headers = self.headers
+    
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+    
+        if release_conn is None:
+            release_conn = preload_content
+    
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+    
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+    
+        conn = None
+    
+        # Track whether `conn` needs to be released before
+        # returning/raising/recursing. Update this variable if necessary, and
+        # leave `release_conn` constant throughout the function. That way, if
+        # the function recurses, the original value of `release_conn` will be
+        # passed down into the recursive call, and its value will be respected.
+        #
+        # See issue #651 [1] for details.
+        #
+        # [1] <https://github.com/urllib3/urllib3/issues/651>
+        release_this_conn = release_conn
+    
+        http_tunnel_required = connection_requires_http_tunnel(
+            self.proxy, self.proxy_config, destination_scheme
+        )
+    
+        # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+        # have to copy the headers dict so we can safely change it without those
+        # changes being reflected in anyone else's copy.
+        if not http_tunnel_required:
+            headers = headers.copy()  # type: ignore[attr-defined]
+            headers.update(self.proxy_headers)  # type: ignore[union-attr]
+    
+        # Must keep the exception bound to a separate variable or else Python 3
+        # complains about UnboundLocalError.
+        err = None
+    
+        # Keep track of whether we cleanly exited the except block. This
+        # ensures we do proper cleanup in finally.
+        clean_exit = False
+    
+        # Rewind body position, if needed. Record current position
+        # for future rewinds in the event of a redirect/retry.
+        body_pos = set_file_position(body, body_pos)
+    
+        try:
+            # Request a connection from the queue.
+            timeout_obj = self._get_timeout(timeout)
+            conn = self._get_conn(timeout=pool_timeout)
+    
+            conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+    
+            # Is this a closed/new connection that requires CONNECT tunnelling?
+            if self.proxy is not None and http_tunnel_required and conn.is_closed:
+                try:
+                    self._prepare_proxy(conn)
+                except (BaseSSLError, OSError, SocketTimeout) as e:
+                    self._raise_timeout(
+                        err=e, url=self.proxy.url, timeout_value=conn.timeout
+                    )
+                    raise
+    
+            # If we're going to release the connection in ``finally:``, then
+            # the response doesn't need to know about the connection. Otherwise
+            # it will also try to release it and we'll have a double-release
+            # mess.
+            response_conn = conn if not release_conn else None
+    
+            # Make the request on the HTTPConnection object
+>           response = self._make_request(
+                conn,
+                method,
+                url,
+                timeout=timeout_obj,
+                body=body,
+                headers=headers,
+                chunked=chunked,
+                retries=retries,
+                response_conn=response_conn,
+                preload_content=preload_content,
+                decode_content=decode_content,
+                **response_kw,
+            )
+
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:787: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:534: in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\connection.py:571: in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\http\client.py:1450: in getresponse
+    response.begin()
+C:\Program Files\Python313\Lib\http\client.py:336: in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <http.client.HTTPResponse object at 0x000001636EBF59F0>
+
+    def _read_status(self):
+        line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+        if len(line) > _MAXLINE:
+            raise LineTooLong("status line")
+        if self.debuglevel > 0:
+            print("reply:", repr(line))
+        if not line:
+            # Presumably, the server closed the connection before
+            # sending a valid response.
+>           raise RemoteDisconnected("Remote end closed connection without"
+                                     " response")
+E           http.client.RemoteDisconnected: Remote end closed connection without response
+
+C:\Program Files\Python313\Lib\http\client.py:305: RemoteDisconnected
+
+During handling of the above exception, another exception occurred:
+
+self = <requests.adapters.HTTPAdapter object at 0x000001632E753AC0>
+request = <PreparedRequest [GET]>, stream = False
+timeout = Timeout(connect=15, read=15, total=None), verify = True, cert = None
+proxies = OrderedDict()
+
+    def send(
+        self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+    ):
+        """Sends PreparedRequest object. Returns Response object.
+    
+        :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
+        :param stream: (optional) Whether to stream the request content.
+        :param timeout: (optional) How long to wait for the server to send
+            data before giving up, as a float, or a :ref:`(connect timeout,
+            read timeout) <timeouts>` tuple.
+        :type timeout: float or tuple or urllib3 Timeout object
+        :param verify: (optional) Either a boolean, in which case it controls whether
+            we verify the server's TLS certificate, or a string, in which case it
+            must be a path to a CA bundle to use
+        :param cert: (optional) Any user-provided SSL certificate to be trusted.
+        :param proxies: (optional) The proxies dictionary to apply to the request.
+        :rtype: requests.Response
+        """
+    
+        try:
+            conn = self.get_connection_with_tls_context(
+                request, verify, proxies=proxies, cert=cert
+            )
+        except LocationValueError as e:
+            raise InvalidURL(e, request=request)
+    
+        self.cert_verify(conn, request.url, verify, cert)
+        url = self.request_url(request, proxies)
+        self.add_headers(
+            request,
+            stream=stream,
+            timeout=timeout,
+            verify=verify,
+            cert=cert,
+            proxies=proxies,
+        )
+    
+        chunked = not (request.body is None or "Content-Length" in request.headers)
+    
+        if isinstance(timeout, tuple):
+            try:
+                connect, read = timeout
+                timeout = TimeoutSauce(connect=connect, read=read)
+            except ValueError:
+                raise ValueError(
+                    f"Invalid timeout {timeout}. Pass a (connect, read) timeout tuple, "
+                    f"or a single float to set both timeouts to the same value."
+                )
+        elif isinstance(timeout, TimeoutSauce):
+            pass
+        else:
+            timeout = TimeoutSauce(connect=timeout, read=timeout)
+    
+        try:
+>           resp = conn.urlopen(
+                method=request.method,
+                url=url,
+                body=request.body,
+                headers=request.headers,
+                redirect=False,
+                assert_same_host=False,
+                preload_content=False,
+                decode_content=False,
+                retries=self.max_retries,
+                timeout=timeout,
+                chunked=chunked,
+            )
+
+C:\Program Files\Python313\Lib\site-packages\requests\adapters.py:645: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:841: in urlopen
+    retries = retries.increment(
+C:\Program Files\Python313\Lib\site-packages\urllib3\util\retry.py:490: in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\util\util.py:38: in reraise
+    raise value.with_traceback(tb)
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:787: in urlopen
+    response = self._make_request(
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:534: in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\connection.py:571: in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\http\client.py:1450: in getresponse
+    response.begin()
+C:\Program Files\Python313\Lib\http\client.py:336: in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <http.client.HTTPResponse object at 0x000001636EBF59F0>
+
+    def _read_status(self):
+        line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+        if len(line) > _MAXLINE:
+            raise LineTooLong("status line")
+        if self.debuglevel > 0:
+            print("reply:", repr(line))
+        if not line:
+            # Presumably, the server closed the connection before
+            # sending a valid response.
+>           raise RemoteDisconnected("Remote end closed connection without"
+                                     " response")
+E           urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+C:\Program Files\Python313\Lib\http\client.py:305: ProtocolError
+
+During handling of the above exception, another exception occurred:
+
+self = <pa_agent.data.akshare_source.AkShareSource object at 0x000001632EA2C440>
+symbol = '000001', timeframe = '1h', n = 30
+
+    def _fetch_history(self, symbol: str, timeframe: str, n: int) -> list[dict[str, Any]]:
+        try:
+            if timeframe == "1d":
+                return self._fetch_daily_ak(symbol, n)
+            if timeframe == "1h":
+>               return self._fetch_minute_ak(symbol, "60", n)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+pa_agent\data\akshare_source.py:340: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pa_agent\data\akshare_source.py:425: in _fetch_minute_ak
+    df = self._call_with_retries(f"min {code} {period}", _pull)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pa_agent\data\akshare_source.py:333: in _call_with_retries
+    raise last_exc
+pa_agent\data\akshare_source.py:321: in _call_with_retries
+    return fn()
+           ^^^^
+pa_agent\data\akshare_source.py:417: in _pull
+    return ak.stock_zh_a_hist_min_em(
+C:\Program Files\Python313\Lib\site-packages\akshare\stock_feature\stock_hist_em.py:1120: in stock_zh_a_hist_min_em
+    r = requests.get(url, timeout=15, params=params)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\api.py:73: in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\api.py:59: in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\sessions.py:592: in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\sessions.py:706: in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <requests.adapters.HTTPAdapter object at 0x000001632E753AC0>
+request = <PreparedRequest [GET]>, stream = False
+timeout = Timeout(connect=15, read=15, total=None), verify = True, cert = None
+proxies = OrderedDict()
+
+    def send(
+        self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+    ):
+        """Sends PreparedRequest object. Returns Response object.
+    
+        :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
+        :param stream: (optional) Whether to stream the request content.
+        :param timeout: (optional) How long to wait for the server to send
+            data before giving up, as a float, or a :ref:`(connect timeout,
+            read timeout) <timeouts>` tuple.
+        :type timeout: float or tuple or urllib3 Timeout object
+        :param verify: (optional) Either a boolean, in which case it controls whether
+            we verify the server's TLS certificate, or a string, in which case it
+            must be a path to a CA bundle to use
+        :param cert: (optional) Any user-provided SSL certificate to be trusted.
+        :param proxies: (optional) The proxies dictionary to apply to the request.
+        :rtype: requests.Response
+        """
+    
+        try:
+            conn = self.get_connection_with_tls_context(
+                request, verify, proxies=proxies, cert=cert
+            )
+        except LocationValueError as e:
+            raise InvalidURL(e, request=request)
+    
+        self.cert_verify(conn, request.url, verify, cert)
+        url = self.request_url(request, proxies)
+        self.add_headers(
+            request,
+            stream=stream,
+            timeout=timeout,
+            verify=verify,
+            cert=cert,
+            proxies=proxies,
+        )
+    
+        chunked = not (request.body is None or "Content-Length" in request.headers)
+    
+        if isinstance(timeout, tuple):
+            try:
+                connect, read = timeout
+                timeout = TimeoutSauce(connect=connect, read=read)
+            except ValueError:
+                raise ValueError(
+                    f"Invalid timeout {timeout}. Pass a (connect, read) timeout tuple, "
+                    f"or a single float to set both timeouts to the same value."
+                )
+        elif isinstance(timeout, TimeoutSauce):
+            pass
+        else:
+            timeout = TimeoutSauce(connect=timeout, read=timeout)
+    
+        try:
+            resp = conn.urlopen(
+                method=request.method,
+                url=url,
+                body=request.body,
+                headers=request.headers,
+                redirect=False,
+                assert_same_host=False,
+                preload_content=False,
+                decode_content=False,
+                retries=self.max_retries,
+                timeout=timeout,
+                chunked=chunked,
+            )
+    
+        except (ProtocolError, OSError) as err:
+>           raise ConnectionError(err, request=request)
+E           requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+C:\Program Files\Python313\Lib\site-packages\requests\adapters.py:660: ConnectionError
+
+The above exception was the direct cause of the following exception:
+
+akshare_available = None
+
+    def test_live_stock_1h(akshare_available: None) -> None:
+        s = _source()
+        s.subscribe("000001", "1h")
+>       bars = s.latest_snapshot(20)
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_akshare_live.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pa_agent\data\akshare_source.py:276: in latest_snapshot
+    rows_asc = self._fetch_history(self._symbol, self._timeframe, fetch_n)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pa_agent.data.akshare_source.AkShareSource object at 0x000001632EA2C440>
+symbol = '000001', timeframe = '1h', n = 30
+
+    def _fetch_history(self, symbol: str, timeframe: str, n: int) -> list[dict[str, Any]]:
+        try:
+            if timeframe == "1d":
+                return self._fetch_daily_ak(symbol, n)
+            if timeframe == "1h":
+                return self._fetch_minute_ak(symbol, "60", n)
+            if timeframe == "4h":
+                rows_60 = self._fetch_minute_ak(symbol, "60", n * 4 + 8)
+                return _resample_rows_to_4h(rows_60)[-n:]
+        except Exception as exc:
+            logger.warning("AkShare 主源失败 (%s): %s", symbol, exc)
+            if self._baostock_ok:
+                try:
+                    return self._fetch_history_baostock(symbol, timeframe, n)
+                except Exception as bs_exc:
+                    logger.warning("Baostock 备用源失败 (%s): %s", symbol, bs_exc)
+                    raise DataSourceTransientError(
+                        f"AkShare 与 Baostock 均失败: {exc}; 备用: {bs_exc}"
+                    ) from bs_exc
+>           raise DataSourceTransientError(f"AkShare 拉取失败: {exc}") from exc
+E           pa_agent.data.base.DataSourceTransientError: AkShare 拉取失败: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+pa_agent\data\akshare_source.py:354: DataSourceTransientError
+------------------------------ Captured log call ------------------------------
+WARNING  pa_agent.data.akshare_source:akshare_source.py:345 AkShare 主源失败 (000001): ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+_____________________________ test_live_stock_1d ______________________________
+
+self = <urllib3.connectionpool.HTTPSConnectionPool object at 0x000001632EA228B0>
+method = 'GET'
+url = '/api/qt/stock/kline/get?fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61%2Cf116&ut=7eea3edcaed734bea9cbfc24409ed989&klt=101&fqt=1&secid=1.600519&beg=20250905&end=20261010'
+body = None
+headers = {'User-Agent': 'python-requests/2.33.1', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive'}
+retries = Retry(total=0, connect=None, read=False, redirect=None, status=None)
+redirect = False, assert_same_host = False
+timeout = Timeout(connect=None, read=None, total=None), pool_timeout = None
+release_conn = False, chunked = False, body_pos = None, preload_content = False
+decode_content = False, response_kw = {}
+parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/api/qt/stock/kline/get', query='fields1=f1%2Cf2%2Cf3%2Cf4%2Cf...Cf61%2Cf116&ut=7eea3edcaed734bea9cbfc24409ed989&klt=101&fqt=1&secid=1.600519&beg=20250905&end=20261010', fragment=None)
+destination_scheme = None, conn = None, release_this_conn = True
+http_tunnel_required = False, err = None, clean_exit = False
+
+    def urlopen(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | bool | int | None = None,
+        redirect: bool = True,
+        assert_same_host: bool = True,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        pool_timeout: int | None = None,
+        release_conn: bool | None = None,
+        chunked: bool = False,
+        body_pos: _TYPE_BODY_POSITION | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        **response_kw: typing.Any,
+    ) -> BaseHTTPResponse:
+        """
+        Get a connection from the pool and perform an HTTP request. This is the
+        lowest level call for making a request, so you'll need to specify all
+        the raw details.
+    
+        .. note::
+    
+           More commonly, it's appropriate to use a convenience method
+           such as :meth:`request`.
+    
+        .. note::
+    
+           `release_conn` will only behave as expected if
+           `preload_content=False` because we want to make
+           `preload_content=False` the default behaviour someday soon without
+           breaking backwards compatibility.
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param redirect:
+            If True, automatically handle redirects (status codes 301, 302,
+            303, 307, 308). Each redirect counts as a retry. Disabling retries
+            will disable redirect, too.
+    
+        :param assert_same_host:
+            If ``True``, will make sure that the host of the pool requests is
+            consistent else will raise HostChangedError. When ``False``, you can
+            use the pool on an HTTP proxy and request foreign hosts.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param pool_timeout:
+            If set and the pool is set to block=True, then this method will
+            block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+            connection is available within the time period.
+    
+        :param bool preload_content:
+            If True, the response's body will be preloaded into memory.
+    
+        :param bool decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param release_conn:
+            If False, then the urlopen call will not release the connection
+            back into the pool once a response is received (but will release if
+            you read the entire contents of the response such as when
+            `preload_content=True`). This is useful if you're not preloading
+            the response's content immediately. You will need to call
+            ``r.release_conn()`` on the response ``r`` to return the connection
+            back into the pool. If None, it takes the value of ``preload_content``
+            which defaults to ``True``.
+    
+        :param bool chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param int body_pos:
+            Position to seek to in file-like body in the event of a retry or
+            redirect. Typically this won't need to be set because urllib3 will
+            auto-populate the value when needed.
+        """
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+    
+        if headers is None:
+            headers = self.headers
+    
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+    
+        if release_conn is None:
+            release_conn = preload_content
+    
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+    
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+    
+        conn = None
+    
+        # Track whether `conn` needs to be released before
+        # returning/raising/recursing. Update this variable if necessary, and
+        # leave `release_conn` constant throughout the function. That way, if
+        # the function recurses, the original value of `release_conn` will be
+        # passed down into the recursive call, and its value will be respected.
+        #
+        # See issue #651 [1] for details.
+        #
+        # [1] <https://github.com/urllib3/urllib3/issues/651>
+        release_this_conn = release_conn
+    
+        http_tunnel_required = connection_requires_http_tunnel(
+            self.proxy, self.proxy_config, destination_scheme
+        )
+    
+        # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+        # have to copy the headers dict so we can safely change it without those
+        # changes being reflected in anyone else's copy.
+        if not http_tunnel_required:
+            headers = headers.copy()  # type: ignore[attr-defined]
+            headers.update(self.proxy_headers)  # type: ignore[union-attr]
+    
+        # Must keep the exception bound to a separate variable or else Python 3
+        # complains about UnboundLocalError.
+        err = None
+    
+        # Keep track of whether we cleanly exited the except block. This
+        # ensures we do proper cleanup in finally.
+        clean_exit = False
+    
+        # Rewind body position, if needed. Record current position
+        # for future rewinds in the event of a redirect/retry.
+        body_pos = set_file_position(body, body_pos)
+    
+        try:
+            # Request a connection from the queue.
+            timeout_obj = self._get_timeout(timeout)
+            conn = self._get_conn(timeout=pool_timeout)
+    
+            conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+    
+            # Is this a closed/new connection that requires CONNECT tunnelling?
+            if self.proxy is not None and http_tunnel_required and conn.is_closed:
+                try:
+                    self._prepare_proxy(conn)
+                except (BaseSSLError, OSError, SocketTimeout) as e:
+                    self._raise_timeout(
+                        err=e, url=self.proxy.url, timeout_value=conn.timeout
+                    )
+                    raise
+    
+            # If we're going to release the connection in ``finally:``, then
+            # the response doesn't need to know about the connection. Otherwise
+            # it will also try to release it and we'll have a double-release
+            # mess.
+            response_conn = conn if not release_conn else None
+    
+            # Make the request on the HTTPConnection object
+>           response = self._make_request(
+                conn,
+                method,
+                url,
+                timeout=timeout_obj,
+                body=body,
+                headers=headers,
+                chunked=chunked,
+                retries=retries,
+                response_conn=response_conn,
+                preload_content=preload_content,
+                decode_content=decode_content,
+                **response_kw,
+            )
+
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:787: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:534: in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\connection.py:571: in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\http\client.py:1450: in getresponse
+    response.begin()
+C:\Program Files\Python313\Lib\http\client.py:336: in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <http.client.HTTPResponse object at 0x000001636EBF5210>
+
+    def _read_status(self):
+        line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+        if len(line) > _MAXLINE:
+            raise LineTooLong("status line")
+        if self.debuglevel > 0:
+            print("reply:", repr(line))
+        if not line:
+            # Presumably, the server closed the connection before
+            # sending a valid response.
+>           raise RemoteDisconnected("Remote end closed connection without"
+                                     " response")
+E           http.client.RemoteDisconnected: Remote end closed connection without response
+
+C:\Program Files\Python313\Lib\http\client.py:305: RemoteDisconnected
+
+During handling of the above exception, another exception occurred:
+
+self = <requests.adapters.HTTPAdapter object at 0x00000163701D8BB0>
+request = <PreparedRequest [GET]>, stream = False
+timeout = Timeout(connect=None, read=None, total=None), verify = True
+cert = None, proxies = OrderedDict()
+
+    def send(
+        self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+    ):
+        """Sends PreparedRequest object. Returns Response object.
+    
+        :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
+        :param stream: (optional) Whether to stream the request content.
+        :param timeout: (optional) How long to wait for the server to send
+            data before giving up, as a float, or a :ref:`(connect timeout,
+            read timeout) <timeouts>` tuple.
+        :type timeout: float or tuple or urllib3 Timeout object
+        :param verify: (optional) Either a boolean, in which case it controls whether
+            we verify the server's TLS certificate, or a string, in which case it
+            must be a path to a CA bundle to use
+        :param cert: (optional) Any user-provided SSL certificate to be trusted.
+        :param proxies: (optional) The proxies dictionary to apply to the request.
+        :rtype: requests.Response
+        """
+    
+        try:
+            conn = self.get_connection_with_tls_context(
+                request, verify, proxies=proxies, cert=cert
+            )
+        except LocationValueError as e:
+            raise InvalidURL(e, request=request)
+    
+        self.cert_verify(conn, request.url, verify, cert)
+        url = self.request_url(request, proxies)
+        self.add_headers(
+            request,
+            stream=stream,
+            timeout=timeout,
+            verify=verify,
+            cert=cert,
+            proxies=proxies,
+        )
+    
+        chunked = not (request.body is None or "Content-Length" in request.headers)
+    
+        if isinstance(timeout, tuple):
+            try:
+                connect, read = timeout
+                timeout = TimeoutSauce(connect=connect, read=read)
+            except ValueError:
+                raise ValueError(
+                    f"Invalid timeout {timeout}. Pass a (connect, read) timeout tuple, "
+                    f"or a single float to set both timeouts to the same value."
+                )
+        elif isinstance(timeout, TimeoutSauce):
+            pass
+        else:
+            timeout = TimeoutSauce(connect=timeout, read=timeout)
+    
+        try:
+>           resp = conn.urlopen(
+                method=request.method,
+                url=url,
+                body=request.body,
+                headers=request.headers,
+                redirect=False,
+                assert_same_host=False,
+                preload_content=False,
+                decode_content=False,
+                retries=self.max_retries,
+                timeout=timeout,
+                chunked=chunked,
+            )
+
+C:\Program Files\Python313\Lib\site-packages\requests\adapters.py:645: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:841: in urlopen
+    retries = retries.increment(
+C:\Program Files\Python313\Lib\site-packages\urllib3\util\retry.py:490: in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\util\util.py:38: in reraise
+    raise value.with_traceback(tb)
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:787: in urlopen
+    response = self._make_request(
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:534: in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\connection.py:571: in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\http\client.py:1450: in getresponse
+    response.begin()
+C:\Program Files\Python313\Lib\http\client.py:336: in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <http.client.HTTPResponse object at 0x000001636EBF5210>
+
+    def _read_status(self):
+        line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+        if len(line) > _MAXLINE:
+            raise LineTooLong("status line")
+        if self.debuglevel > 0:
+            print("reply:", repr(line))
+        if not line:
+            # Presumably, the server closed the connection before
+            # sending a valid response.
+>           raise RemoteDisconnected("Remote end closed connection without"
+                                     " response")
+E           urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+C:\Program Files\Python313\Lib\http\client.py:305: ProtocolError
+
+During handling of the above exception, another exception occurred:
+
+self = <pa_agent.data.akshare_source.AkShareSource object at 0x000001636EA42490>
+symbol = '600519', timeframe = '1d', n = 35
+
+    def _fetch_history(self, symbol: str, timeframe: str, n: int) -> list[dict[str, Any]]:
+        try:
+            if timeframe == "1d":
+>               return self._fetch_daily_ak(symbol, n)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+pa_agent\data\akshare_source.py:338: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pa_agent\data\akshare_source.py:378: in _fetch_daily_ak
+    df = self._call_with_retries(
+pa_agent\data\akshare_source.py:333: in _call_with_retries
+    raise last_exc
+pa_agent\data\akshare_source.py:321: in _call_with_retries
+    return fn()
+           ^^^^
+pa_agent\data\akshare_source.py:380: in <lambda>
+    lambda: ak.stock_zh_a_hist(
+C:\Program Files\Python313\Lib\site-packages\akshare\stock_feature\stock_hist_em.py:992: in stock_zh_a_hist
+    r = requests.get(url, params=params, timeout=timeout)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\api.py:73: in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\api.py:59: in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\sessions.py:592: in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\sessions.py:706: in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <requests.adapters.HTTPAdapter object at 0x00000163701D8BB0>
+request = <PreparedRequest [GET]>, stream = False
+timeout = Timeout(connect=None, read=None, total=None), verify = True
+cert = None, proxies = OrderedDict()
+
+    def send(
+        self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+    ):
+        """Sends PreparedRequest object. Returns Response object.
+    
+        :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
+        :param stream: (optional) Whether to stream the request content.
+        :param timeout: (optional) How long to wait for the server to send
+            data before giving up, as a float, or a :ref:`(connect timeout,
+            read timeout) <timeouts>` tuple.
+        :type timeout: float or tuple or urllib3 Timeout object
+        :param verify: (optional) Either a boolean, in which case it controls whether
+            we verify the server's TLS certificate, or a string, in which case it
+            must be a path to a CA bundle to use
+        :param cert: (optional) Any user-provided SSL certificate to be trusted.
+        :param proxies: (optional) The proxies dictionary to apply to the request.
+        :rtype: requests.Response
+        """
+    
+        try:
+            conn = self.get_connection_with_tls_context(
+                request, verify, proxies=proxies, cert=cert
+            )
+        except LocationValueError as e:
+            raise InvalidURL(e, request=request)
+    
+        self.cert_verify(conn, request.url, verify, cert)
+        url = self.request_url(request, proxies)
+        self.add_headers(
+            request,
+            stream=stream,
+            timeout=timeout,
+            verify=verify,
+            cert=cert,
+            proxies=proxies,
+        )
+    
+        chunked = not (request.body is None or "Content-Length" in request.headers)
+    
+        if isinstance(timeout, tuple):
+            try:
+                connect, read = timeout
+                timeout = TimeoutSauce(connect=connect, read=read)
+            except ValueError:
+                raise ValueError(
+                    f"Invalid timeout {timeout}. Pass a (connect, read) timeout tuple, "
+                    f"or a single float to set both timeouts to the same value."
+                )
+        elif isinstance(timeout, TimeoutSauce):
+            pass
+        else:
+            timeout = TimeoutSauce(connect=timeout, read=timeout)
+    
+        try:
+            resp = conn.urlopen(
+                method=request.method,
+                url=url,
+                body=request.body,
+                headers=request.headers,
+                redirect=False,
+                assert_same_host=False,
+                preload_content=False,
+                decode_content=False,
+                retries=self.max_retries,
+                timeout=timeout,
+                chunked=chunked,
+            )
+    
+        except (ProtocolError, OSError) as err:
+>           raise ConnectionError(err, request=request)
+E           requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+C:\Program Files\Python313\Lib\site-packages\requests\adapters.py:660: ConnectionError
+
+The above exception was the direct cause of the following exception:
+
+akshare_available = None
+
+    def test_live_stock_1d(akshare_available: None) -> None:
+        time.sleep(2)
+        s = _source()
+        s.subscribe("600519", "1d")
+>       bars = s.latest_snapshot(30)
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_akshare_live.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pa_agent\data\akshare_source.py:276: in latest_snapshot
+    rows_asc = self._fetch_history(self._symbol, self._timeframe, fetch_n)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pa_agent.data.akshare_source.AkShareSource object at 0x000001636EA42490>
+symbol = '600519', timeframe = '1d', n = 35
+
+    def _fetch_history(self, symbol: str, timeframe: str, n: int) -> list[dict[str, Any]]:
+        try:
+            if timeframe == "1d":
+                return self._fetch_daily_ak(symbol, n)
+            if timeframe == "1h":
+                return self._fetch_minute_ak(symbol, "60", n)
+            if timeframe == "4h":
+                rows_60 = self._fetch_minute_ak(symbol, "60", n * 4 + 8)
+                return _resample_rows_to_4h(rows_60)[-n:]
+        except Exception as exc:
+            logger.warning("AkShare 主源失败 (%s): %s", symbol, exc)
+            if self._baostock_ok:
+                try:
+                    return self._fetch_history_baostock(symbol, timeframe, n)
+                except Exception as bs_exc:
+                    logger.warning("Baostock 备用源失败 (%s): %s", symbol, bs_exc)
+                    raise DataSourceTransientError(
+                        f"AkShare 与 Baostock 均失败: {exc}; 备用: {bs_exc}"
+                    ) from bs_exc
+>           raise DataSourceTransientError(f"AkShare 拉取失败: {exc}") from exc
+E           pa_agent.data.base.DataSourceTransientError: AkShare 拉取失败: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+pa_agent\data\akshare_source.py:354: DataSourceTransientError
+------------------------------ Captured log call ------------------------------
+WARNING  pa_agent.data.akshare_source:akshare_source.py:345 AkShare 主源失败 (600519): ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+_____________________________ test_live_stock_4h ______________________________
+
+self = <urllib3.connectionpool.HTTPSConnectionPool object at 0x000001632EA209D0>
+method = 'GET'
+url = '/api/qt/stock/kline/get?fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989&klt=60&fqt=1&secid=0.000001&beg=0&end=20500000'
+body = None
+headers = {'User-Agent': 'python-requests/2.33.1', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive'}
+retries = Retry(total=0, connect=None, read=False, redirect=None, status=None)
+redirect = False, assert_same_host = False
+timeout = Timeout(connect=15, read=15, total=None), pool_timeout = None
+release_conn = False, chunked = False, body_pos = None, preload_content = False
+decode_content = False, response_kw = {}
+parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/api/qt/stock/kline/get', query='fields1=f1%2Cf2%2Cf3%2Cf4%2Cf...8%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989&klt=60&fqt=1&secid=0.000001&beg=0&end=20500000', fragment=None)
+destination_scheme = None, conn = None, release_this_conn = True
+http_tunnel_required = False, err = None, clean_exit = False
+
+    def urlopen(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | bool | int | None = None,
+        redirect: bool = True,
+        assert_same_host: bool = True,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        pool_timeout: int | None = None,
+        release_conn: bool | None = None,
+        chunked: bool = False,
+        body_pos: _TYPE_BODY_POSITION | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        **response_kw: typing.Any,
+    ) -> BaseHTTPResponse:
+        """
+        Get a connection from the pool and perform an HTTP request. This is the
+        lowest level call for making a request, so you'll need to specify all
+        the raw details.
+    
+        .. note::
+    
+           More commonly, it's appropriate to use a convenience method
+           such as :meth:`request`.
+    
+        .. note::
+    
+           `release_conn` will only behave as expected if
+           `preload_content=False` because we want to make
+           `preload_content=False` the default behaviour someday soon without
+           breaking backwards compatibility.
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param redirect:
+            If True, automatically handle redirects (status codes 301, 302,
+            303, 307, 308). Each redirect counts as a retry. Disabling retries
+            will disable redirect, too.
+    
+        :param assert_same_host:
+            If ``True``, will make sure that the host of the pool requests is
+            consistent else will raise HostChangedError. When ``False``, you can
+            use the pool on an HTTP proxy and request foreign hosts.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param pool_timeout:
+            If set and the pool is set to block=True, then this method will
+            block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+            connection is available within the time period.
+    
+        :param bool preload_content:
+            If True, the response's body will be preloaded into memory.
+    
+        :param bool decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param release_conn:
+            If False, then the urlopen call will not release the connection
+            back into the pool once a response is received (but will release if
+            you read the entire contents of the response such as when
+            `preload_content=True`). This is useful if you're not preloading
+            the response's content immediately. You will need to call
+            ``r.release_conn()`` on the response ``r`` to return the connection
+            back into the pool. If None, it takes the value of ``preload_content``
+            which defaults to ``True``.
+    
+        :param bool chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param int body_pos:
+            Position to seek to in file-like body in the event of a retry or
+            redirect. Typically this won't need to be set because urllib3 will
+            auto-populate the value when needed.
+        """
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+    
+        if headers is None:
+            headers = self.headers
+    
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+    
+        if release_conn is None:
+            release_conn = preload_content
+    
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+    
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+    
+        conn = None
+    
+        # Track whether `conn` needs to be released before
+        # returning/raising/recursing. Update this variable if necessary, and
+        # leave `release_conn` constant throughout the function. That way, if
+        # the function recurses, the original value of `release_conn` will be
+        # passed down into the recursive call, and its value will be respected.
+        #
+        # See issue #651 [1] for details.
+        #
+        # [1] <https://github.com/urllib3/urllib3/issues/651>
+        release_this_conn = release_conn
+    
+        http_tunnel_required = connection_requires_http_tunnel(
+            self.proxy, self.proxy_config, destination_scheme
+        )
+    
+        # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+        # have to copy the headers dict so we can safely change it without those
+        # changes being reflected in anyone else's copy.
+        if not http_tunnel_required:
+            headers = headers.copy()  # type: ignore[attr-defined]
+            headers.update(self.proxy_headers)  # type: ignore[union-attr]
+    
+        # Must keep the exception bound to a separate variable or else Python 3
+        # complains about UnboundLocalError.
+        err = None
+    
+        # Keep track of whether we cleanly exited the except block. This
+        # ensures we do proper cleanup in finally.
+        clean_exit = False
+    
+        # Rewind body position, if needed. Record current position
+        # for future rewinds in the event of a redirect/retry.
+        body_pos = set_file_position(body, body_pos)
+    
+        try:
+            # Request a connection from the queue.
+            timeout_obj = self._get_timeout(timeout)
+            conn = self._get_conn(timeout=pool_timeout)
+    
+            conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+    
+            # Is this a closed/new connection that requires CONNECT tunnelling?
+            if self.proxy is not None and http_tunnel_required and conn.is_closed:
+                try:
+                    self._prepare_proxy(conn)
+                except (BaseSSLError, OSError, SocketTimeout) as e:
+                    self._raise_timeout(
+                        err=e, url=self.proxy.url, timeout_value=conn.timeout
+                    )
+                    raise
+    
+            # If we're going to release the connection in ``finally:``, then
+            # the response doesn't need to know about the connection. Otherwise
+            # it will also try to release it and we'll have a double-release
+            # mess.
+            response_conn = conn if not release_conn else None
+    
+            # Make the request on the HTTPConnection object
+>           response = self._make_request(
+                conn,
+                method,
+                url,
+                timeout=timeout_obj,
+                body=body,
+                headers=headers,
+                chunked=chunked,
+                retries=retries,
+                response_conn=response_conn,
+                preload_content=preload_content,
+                decode_content=decode_content,
+                **response_kw,
+            )
+
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:787: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:534: in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\connection.py:571: in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\http\client.py:1450: in getresponse
+    response.begin()
+C:\Program Files\Python313\Lib\http\client.py:336: in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <http.client.HTTPResponse object at 0x000001636EBF67A0>
+
+    def _read_status(self):
+        line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+        if len(line) > _MAXLINE:
+            raise LineTooLong("status line")
+        if self.debuglevel > 0:
+            print("reply:", repr(line))
+        if not line:
+            # Presumably, the server closed the connection before
+            # sending a valid response.
+>           raise RemoteDisconnected("Remote end closed connection without"
+                                     " response")
+E           http.client.RemoteDisconnected: Remote end closed connection without response
+
+C:\Program Files\Python313\Lib\http\client.py:305: RemoteDisconnected
+
+During handling of the above exception, another exception occurred:
+
+self = <requests.adapters.HTTPAdapter object at 0x0000016370181650>
+request = <PreparedRequest [GET]>, stream = False
+timeout = Timeout(connect=15, read=15, total=None), verify = True, cert = None
+proxies = OrderedDict()
+
+    def send(
+        self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+    ):
+        """Sends PreparedRequest object. Returns Response object.
+    
+        :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
+        :param stream: (optional) Whether to stream the request content.
+        :param timeout: (optional) How long to wait for the server to send
+            data before giving up, as a float, or a :ref:`(connect timeout,
+            read timeout) <timeouts>` tuple.
+        :type timeout: float or tuple or urllib3 Timeout object
+        :param verify: (optional) Either a boolean, in which case it controls whether
+            we verify the server's TLS certificate, or a string, in which case it
+            must be a path to a CA bundle to use
+        :param cert: (optional) Any user-provided SSL certificate to be trusted.
+        :param proxies: (optional) The proxies dictionary to apply to the request.
+        :rtype: requests.Response
+        """
+    
+        try:
+            conn = self.get_connection_with_tls_context(
+                request, verify, proxies=proxies, cert=cert
+            )
+        except LocationValueError as e:
+            raise InvalidURL(e, request=request)
+    
+        self.cert_verify(conn, request.url, verify, cert)
+        url = self.request_url(request, proxies)
+        self.add_headers(
+            request,
+            stream=stream,
+            timeout=timeout,
+            verify=verify,
+            cert=cert,
+            proxies=proxies,
+        )
+    
+        chunked = not (request.body is None or "Content-Length" in request.headers)
+    
+        if isinstance(timeout, tuple):
+            try:
+                connect, read = timeout
+                timeout = TimeoutSauce(connect=connect, read=read)
+            except ValueError:
+                raise ValueError(
+                    f"Invalid timeout {timeout}. Pass a (connect, read) timeout tuple, "
+                    f"or a single float to set both timeouts to the same value."
+                )
+        elif isinstance(timeout, TimeoutSauce):
+            pass
+        else:
+            timeout = TimeoutSauce(connect=timeout, read=timeout)
+    
+        try:
+>           resp = conn.urlopen(
+                method=request.method,
+                url=url,
+                body=request.body,
+                headers=request.headers,
+                redirect=False,
+                assert_same_host=False,
+                preload_content=False,
+                decode_content=False,
+                retries=self.max_retries,
+                timeout=timeout,
+                chunked=chunked,
+            )
+
+C:\Program Files\Python313\Lib\site-packages\requests\adapters.py:645: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:841: in urlopen
+    retries = retries.increment(
+C:\Program Files\Python313\Lib\site-packages\urllib3\util\retry.py:490: in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\util\util.py:38: in reraise
+    raise value.with_traceback(tb)
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:787: in urlopen
+    response = self._make_request(
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:534: in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\connection.py:571: in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\http\client.py:1450: in getresponse
+    response.begin()
+C:\Program Files\Python313\Lib\http\client.py:336: in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <http.client.HTTPResponse object at 0x000001636EBF67A0>
+
+    def _read_status(self):
+        line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+        if len(line) > _MAXLINE:
+            raise LineTooLong("status line")
+        if self.debuglevel > 0:
+            print("reply:", repr(line))
+        if not line:
+            # Presumably, the server closed the connection before
+            # sending a valid response.
+>           raise RemoteDisconnected("Remote end closed connection without"
+                                     " response")
+E           urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+C:\Program Files\Python313\Lib\http\client.py:305: ProtocolError
+
+During handling of the above exception, another exception occurred:
+
+self = <pa_agent.data.akshare_source.AkShareSource object at 0x000001636EA416D0>
+symbol = '000001', timeframe = '4h', n = 30
+
+    def _fetch_history(self, symbol: str, timeframe: str, n: int) -> list[dict[str, Any]]:
+        try:
+            if timeframe == "1d":
+                return self._fetch_daily_ak(symbol, n)
+            if timeframe == "1h":
+                return self._fetch_minute_ak(symbol, "60", n)
+            if timeframe == "4h":
+>               rows_60 = self._fetch_minute_ak(symbol, "60", n * 4 + 8)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+pa_agent\data\akshare_source.py:342: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pa_agent\data\akshare_source.py:425: in _fetch_minute_ak
+    df = self._call_with_retries(f"min {code} {period}", _pull)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pa_agent\data\akshare_source.py:333: in _call_with_retries
+    raise last_exc
+pa_agent\data\akshare_source.py:321: in _call_with_retries
+    return fn()
+           ^^^^
+pa_agent\data\akshare_source.py:417: in _pull
+    return ak.stock_zh_a_hist_min_em(
+C:\Program Files\Python313\Lib\site-packages\akshare\stock_feature\stock_hist_em.py:1120: in stock_zh_a_hist_min_em
+    r = requests.get(url, timeout=15, params=params)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\api.py:73: in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\api.py:59: in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\sessions.py:592: in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\sessions.py:706: in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <requests.adapters.HTTPAdapter object at 0x0000016370181650>
+request = <PreparedRequest [GET]>, stream = False
+timeout = Timeout(connect=15, read=15, total=None), verify = True, cert = None
+proxies = OrderedDict()
+
+    def send(
+        self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+    ):
+        """Sends PreparedRequest object. Returns Response object.
+    
+        :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
+        :param stream: (optional) Whether to stream the request content.
+        :param timeout: (optional) How long to wait for the server to send
+            data before giving up, as a float, or a :ref:`(connect timeout,
+            read timeout) <timeouts>` tuple.
+        :type timeout: float or tuple or urllib3 Timeout object
+        :param verify: (optional) Either a boolean, in which case it controls whether
+            we verify the server's TLS certificate, or a string, in which case it
+            must be a path to a CA bundle to use
+        :param cert: (optional) Any user-provided SSL certificate to be trusted.
+        :param proxies: (optional) The proxies dictionary to apply to the request.
+        :rtype: requests.Response
+        """
+    
+        try:
+            conn = self.get_connection_with_tls_context(
+                request, verify, proxies=proxies, cert=cert
+            )
+        except LocationValueError as e:
+            raise InvalidURL(e, request=request)
+    
+        self.cert_verify(conn, request.url, verify, cert)
+        url = self.request_url(request, proxies)
+        self.add_headers(
+            request,
+            stream=stream,
+            timeout=timeout,
+            verify=verify,
+            cert=cert,
+            proxies=proxies,
+        )
+    
+        chunked = not (request.body is None or "Content-Length" in request.headers)
+    
+        if isinstance(timeout, tuple):
+            try:
+                connect, read = timeout
+                timeout = TimeoutSauce(connect=connect, read=read)
+            except ValueError:
+                raise ValueError(
+                    f"Invalid timeout {timeout}. Pass a (connect, read) timeout tuple, "
+                    f"or a single float to set both timeouts to the same value."
+                )
+        elif isinstance(timeout, TimeoutSauce):
+            pass
+        else:
+            timeout = TimeoutSauce(connect=timeout, read=timeout)
+    
+        try:
+            resp = conn.urlopen(
+                method=request.method,
+                url=url,
+                body=request.body,
+                headers=request.headers,
+                redirect=False,
+                assert_same_host=False,
+                preload_content=False,
+                decode_content=False,
+                retries=self.max_retries,
+                timeout=timeout,
+                chunked=chunked,
+            )
+    
+        except (ProtocolError, OSError) as err:
+>           raise ConnectionError(err, request=request)
+E           requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+C:\Program Files\Python313\Lib\site-packages\requests\adapters.py:660: ConnectionError
+
+The above exception was the direct cause of the following exception:
+
+akshare_available = None
+
+    def test_live_stock_4h(akshare_available: None) -> None:
+        time.sleep(2)
+        s = _source()
+        s.subscribe("000001", "4h")
+>       bars = s.latest_snapshot(15)
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_akshare_live.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pa_agent\data\akshare_source.py:276: in latest_snapshot
+    rows_asc = self._fetch_history(self._symbol, self._timeframe, fetch_n)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pa_agent.data.akshare_source.AkShareSource object at 0x000001636EA416D0>
+symbol = '000001', timeframe = '4h', n = 30
+
+    def _fetch_history(self, symbol: str, timeframe: str, n: int) -> list[dict[str, Any]]:
+        try:
+            if timeframe == "1d":
+                return self._fetch_daily_ak(symbol, n)
+            if timeframe == "1h":
+                return self._fetch_minute_ak(symbol, "60", n)
+            if timeframe == "4h":
+                rows_60 = self._fetch_minute_ak(symbol, "60", n * 4 + 8)
+                return _resample_rows_to_4h(rows_60)[-n:]
+        except Exception as exc:
+            logger.warning("AkShare 主源失败 (%s): %s", symbol, exc)
+            if self._baostock_ok:
+                try:
+                    return self._fetch_history_baostock(symbol, timeframe, n)
+                except Exception as bs_exc:
+                    logger.warning("Baostock 备用源失败 (%s): %s", symbol, bs_exc)
+                    raise DataSourceTransientError(
+                        f"AkShare 与 Baostock 均失败: {exc}; 备用: {bs_exc}"
+                    ) from bs_exc
+>           raise DataSourceTransientError(f"AkShare 拉取失败: {exc}") from exc
+E           pa_agent.data.base.DataSourceTransientError: AkShare 拉取失败: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+pa_agent\data\akshare_source.py:354: DataSourceTransientError
+------------------------------ Captured log call ------------------------------
+WARNING  pa_agent.data.akshare_source:akshare_source.py:345 AkShare 主源失败 (000001): ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+______________________ test_live_three_snapshots_stable _______________________
+
+self = <urllib3.connectionpool.HTTPSConnectionPool object at 0x000001632EA20C30>
+method = 'GET'
+url = '/api/qt/stock/kline/get?fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989&klt=60&fqt=1&secid=0.000001&beg=0&end=20500000'
+body = None
+headers = {'User-Agent': 'python-requests/2.33.1', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive'}
+retries = Retry(total=0, connect=None, read=False, redirect=None, status=None)
+redirect = False, assert_same_host = False
+timeout = Timeout(connect=15, read=15, total=None), pool_timeout = None
+release_conn = False, chunked = False, body_pos = None, preload_content = False
+decode_content = False, response_kw = {}
+parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/api/qt/stock/kline/get', query='fields1=f1%2Cf2%2Cf3%2Cf4%2Cf...8%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989&klt=60&fqt=1&secid=0.000001&beg=0&end=20500000', fragment=None)
+destination_scheme = None, conn = None, release_this_conn = True
+http_tunnel_required = False, err = None, clean_exit = False
+
+    def urlopen(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | bool | int | None = None,
+        redirect: bool = True,
+        assert_same_host: bool = True,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        pool_timeout: int | None = None,
+        release_conn: bool | None = None,
+        chunked: bool = False,
+        body_pos: _TYPE_BODY_POSITION | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        **response_kw: typing.Any,
+    ) -> BaseHTTPResponse:
+        """
+        Get a connection from the pool and perform an HTTP request. This is the
+        lowest level call for making a request, so you'll need to specify all
+        the raw details.
+    
+        .. note::
+    
+           More commonly, it's appropriate to use a convenience method
+           such as :meth:`request`.
+    
+        .. note::
+    
+           `release_conn` will only behave as expected if
+           `preload_content=False` because we want to make
+           `preload_content=False` the default behaviour someday soon without
+           breaking backwards compatibility.
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param redirect:
+            If True, automatically handle redirects (status codes 301, 302,
+            303, 307, 308). Each redirect counts as a retry. Disabling retries
+            will disable redirect, too.
+    
+        :param assert_same_host:
+            If ``True``, will make sure that the host of the pool requests is
+            consistent else will raise HostChangedError. When ``False``, you can
+            use the pool on an HTTP proxy and request foreign hosts.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param pool_timeout:
+            If set and the pool is set to block=True, then this method will
+            block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+            connection is available within the time period.
+    
+        :param bool preload_content:
+            If True, the response's body will be preloaded into memory.
+    
+        :param bool decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param release_conn:
+            If False, then the urlopen call will not release the connection
+            back into the pool once a response is received (but will release if
+            you read the entire contents of the response such as when
+            `preload_content=True`). This is useful if you're not preloading
+            the response's content immediately. You will need to call
+            ``r.release_conn()`` on the response ``r`` to return the connection
+            back into the pool. If None, it takes the value of ``preload_content``
+            which defaults to ``True``.
+    
+        :param bool chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param int body_pos:
+            Position to seek to in file-like body in the event of a retry or
+            redirect. Typically this won't need to be set because urllib3 will
+            auto-populate the value when needed.
+        """
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+    
+        if headers is None:
+            headers = self.headers
+    
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+    
+        if release_conn is None:
+            release_conn = preload_content
+    
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+    
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+    
+        conn = None
+    
+        # Track whether `conn` needs to be released before
+        # returning/raising/recursing. Update this variable if necessary, and
+        # leave `release_conn` constant throughout the function. That way, if
+        # the function recurses, the original value of `release_conn` will be
+        # passed down into the recursive call, and its value will be respected.
+        #
+        # See issue #651 [1] for details.
+        #
+        # [1] <https://github.com/urllib3/urllib3/issues/651>
+        release_this_conn = release_conn
+    
+        http_tunnel_required = connection_requires_http_tunnel(
+            self.proxy, self.proxy_config, destination_scheme
+        )
+    
+        # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+        # have to copy the headers dict so we can safely change it without those
+        # changes being reflected in anyone else's copy.
+        if not http_tunnel_required:
+            headers = headers.copy()  # type: ignore[attr-defined]
+            headers.update(self.proxy_headers)  # type: ignore[union-attr]
+    
+        # Must keep the exception bound to a separate variable or else Python 3
+        # complains about UnboundLocalError.
+        err = None
+    
+        # Keep track of whether we cleanly exited the except block. This
+        # ensures we do proper cleanup in finally.
+        clean_exit = False
+    
+        # Rewind body position, if needed. Record current position
+        # for future rewinds in the event of a redirect/retry.
+        body_pos = set_file_position(body, body_pos)
+    
+        try:
+            # Request a connection from the queue.
+            timeout_obj = self._get_timeout(timeout)
+            conn = self._get_conn(timeout=pool_timeout)
+    
+            conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+    
+            # Is this a closed/new connection that requires CONNECT tunnelling?
+            if self.proxy is not None and http_tunnel_required and conn.is_closed:
+                try:
+                    self._prepare_proxy(conn)
+                except (BaseSSLError, OSError, SocketTimeout) as e:
+                    self._raise_timeout(
+                        err=e, url=self.proxy.url, timeout_value=conn.timeout
+                    )
+                    raise
+    
+            # If we're going to release the connection in ``finally:``, then
+            # the response doesn't need to know about the connection. Otherwise
+            # it will also try to release it and we'll have a double-release
+            # mess.
+            response_conn = conn if not release_conn else None
+    
+            # Make the request on the HTTPConnection object
+>           response = self._make_request(
+                conn,
+                method,
+                url,
+                timeout=timeout_obj,
+                body=body,
+                headers=headers,
+                chunked=chunked,
+                retries=retries,
+                response_conn=response_conn,
+                preload_content=preload_content,
+                decode_content=decode_content,
+                **response_kw,
+            )
+
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:787: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:534: in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\connection.py:571: in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\http\client.py:1450: in getresponse
+    response.begin()
+C:\Program Files\Python313\Lib\http\client.py:336: in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <http.client.HTTPResponse object at 0x000001636EBF70A0>
+
+    def _read_status(self):
+        line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+        if len(line) > _MAXLINE:
+            raise LineTooLong("status line")
+        if self.debuglevel > 0:
+            print("reply:", repr(line))
+        if not line:
+            # Presumably, the server closed the connection before
+            # sending a valid response.
+>           raise RemoteDisconnected("Remote end closed connection without"
+                                     " response")
+E           http.client.RemoteDisconnected: Remote end closed connection without response
+
+C:\Program Files\Python313\Lib\http\client.py:305: RemoteDisconnected
+
+During handling of the above exception, another exception occurred:
+
+self = <requests.adapters.HTTPAdapter object at 0x000001637054F650>
+request = <PreparedRequest [GET]>, stream = False
+timeout = Timeout(connect=15, read=15, total=None), verify = True, cert = None
+proxies = OrderedDict()
+
+    def send(
+        self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+    ):
+        """Sends PreparedRequest object. Returns Response object.
+    
+        :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
+        :param stream: (optional) Whether to stream the request content.
+        :param timeout: (optional) How long to wait for the server to send
+            data before giving up, as a float, or a :ref:`(connect timeout,
+            read timeout) <timeouts>` tuple.
+        :type timeout: float or tuple or urllib3 Timeout object
+        :param verify: (optional) Either a boolean, in which case it controls whether
+            we verify the server's TLS certificate, or a string, in which case it
+            must be a path to a CA bundle to use
+        :param cert: (optional) Any user-provided SSL certificate to be trusted.
+        :param proxies: (optional) The proxies dictionary to apply to the request.
+        :rtype: requests.Response
+        """
+    
+        try:
+            conn = self.get_connection_with_tls_context(
+                request, verify, proxies=proxies, cert=cert
+            )
+        except LocationValueError as e:
+            raise InvalidURL(e, request=request)
+    
+        self.cert_verify(conn, request.url, verify, cert)
+        url = self.request_url(request, proxies)
+        self.add_headers(
+            request,
+            stream=stream,
+            timeout=timeout,
+            verify=verify,
+            cert=cert,
+            proxies=proxies,
+        )
+    
+        chunked = not (request.body is None or "Content-Length" in request.headers)
+    
+        if isinstance(timeout, tuple):
+            try:
+                connect, read = timeout
+                timeout = TimeoutSauce(connect=connect, read=read)
+            except ValueError:
+                raise ValueError(
+                    f"Invalid timeout {timeout}. Pass a (connect, read) timeout tuple, "
+                    f"or a single float to set both timeouts to the same value."
+                )
+        elif isinstance(timeout, TimeoutSauce):
+            pass
+        else:
+            timeout = TimeoutSauce(connect=timeout, read=timeout)
+    
+        try:
+>           resp = conn.urlopen(
+                method=request.method,
+                url=url,
+                body=request.body,
+                headers=request.headers,
+                redirect=False,
+                assert_same_host=False,
+                preload_content=False,
+                decode_content=False,
+                retries=self.max_retries,
+                timeout=timeout,
+                chunked=chunked,
+            )
+
+C:\Program Files\Python313\Lib\site-packages\requests\adapters.py:645: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:841: in urlopen
+    retries = retries.increment(
+C:\Program Files\Python313\Lib\site-packages\urllib3\util\retry.py:490: in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\util\util.py:38: in reraise
+    raise value.with_traceback(tb)
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:787: in urlopen
+    response = self._make_request(
+C:\Program Files\Python313\Lib\site-packages\urllib3\connectionpool.py:534: in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\urllib3\connection.py:571: in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\http\client.py:1450: in getresponse
+    response.begin()
+C:\Program Files\Python313\Lib\http\client.py:336: in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <http.client.HTTPResponse object at 0x000001636EBF70A0>
+
+    def _read_status(self):
+        line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+        if len(line) > _MAXLINE:
+            raise LineTooLong("status line")
+        if self.debuglevel > 0:
+            print("reply:", repr(line))
+        if not line:
+            # Presumably, the server closed the connection before
+            # sending a valid response.
+>           raise RemoteDisconnected("Remote end closed connection without"
+                                     " response")
+E           urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+C:\Program Files\Python313\Lib\http\client.py:305: ProtocolError
+
+During handling of the above exception, another exception occurred:
+
+self = <pa_agent.data.akshare_source.AkShareSource object at 0x000001632EA21350>
+symbol = '000001', timeframe = '1h', n = 30
+
+    def _fetch_history(self, symbol: str, timeframe: str, n: int) -> list[dict[str, Any]]:
+        try:
+            if timeframe == "1d":
+                return self._fetch_daily_ak(symbol, n)
+            if timeframe == "1h":
+>               return self._fetch_minute_ak(symbol, "60", n)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+pa_agent\data\akshare_source.py:340: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pa_agent\data\akshare_source.py:425: in _fetch_minute_ak
+    df = self._call_with_retries(f"min {code} {period}", _pull)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pa_agent\data\akshare_source.py:333: in _call_with_retries
+    raise last_exc
+pa_agent\data\akshare_source.py:321: in _call_with_retries
+    return fn()
+           ^^^^
+pa_agent\data\akshare_source.py:417: in _pull
+    return ak.stock_zh_a_hist_min_em(
+C:\Program Files\Python313\Lib\site-packages\akshare\stock_feature\stock_hist_em.py:1120: in stock_zh_a_hist_min_em
+    r = requests.get(url, timeout=15, params=params)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\api.py:73: in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\api.py:59: in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\sessions.py:592: in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python313\Lib\site-packages\requests\sessions.py:706: in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <requests.adapters.HTTPAdapter object at 0x000001637054F650>
+request = <PreparedRequest [GET]>, stream = False
+timeout = Timeout(connect=15, read=15, total=None), verify = True, cert = None
+proxies = OrderedDict()
+
+    def send(
+        self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+    ):
+        """Sends PreparedRequest object. Returns Response object.
+    
+        :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
+        :param stream: (optional) Whether to stream the request content.
+        :param timeout: (optional) How long to wait for the server to send
+            data before giving up, as a float, or a :ref:`(connect timeout,
+            read timeout) <timeouts>` tuple.
+        :type timeout: float or tuple or urllib3 Timeout object
+        :param verify: (optional) Either a boolean, in which case it controls whether
+            we verify the server's TLS certificate, or a string, in which case it
+            must be a path to a CA bundle to use
+        :param cert: (optional) Any user-provided SSL certificate to be trusted.
+        :param proxies: (optional) The proxies dictionary to apply to the request.
+        :rtype: requests.Response
+        """
+    
+        try:
+            conn = self.get_connection_with_tls_context(
+                request, verify, proxies=proxies, cert=cert
+            )
+        except LocationValueError as e:
+            raise InvalidURL(e, request=request)
+    
+        self.cert_verify(conn, request.url, verify, cert)
+        url = self.request_url(request, proxies)
+        self.add_headers(
+            request,
+            stream=stream,
+            timeout=timeout,
+            verify=verify,
+            cert=cert,
+            proxies=proxies,
+        )
+    
+        chunked = not (request.body is None or "Content-Length" in request.headers)
+    
+        if isinstance(timeout, tuple):
+            try:
+                connect, read = timeout
+                timeout = TimeoutSauce(connect=connect, read=read)
+            except ValueError:
+                raise ValueError(
+                    f"Invalid timeout {timeout}. Pass a (connect, read) timeout tuple, "
+                    f"or a single float to set both timeouts to the same value."
+                )
+        elif isinstance(timeout, TimeoutSauce):
+            pass
+        else:
+            timeout = TimeoutSauce(connect=timeout, read=timeout)
+    
+        try:
+            resp = conn.urlopen(
+                method=request.method,
+                url=url,
+                body=request.body,
+                headers=request.headers,
+                redirect=False,
+                assert_same_host=False,
+                preload_content=False,
+                decode_content=False,
+                retries=self.max_retries,
+                timeout=timeout,
+                chunked=chunked,
+            )
+    
+        except (ProtocolError, OSError) as err:
+>           raise ConnectionError(err, request=request)
+E           requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+C:\Program Files\Python313\Lib\site-packages\requests\adapters.py:660: ConnectionError
+
+The above exception was the direct cause of the following exception:
+
+akshare_available = None
+
+    def test_live_three_snapshots_stable(akshare_available: None) -> None:
+        """Three consecutive fetches (simulates RefreshLoop) without fallback."""
+        time.sleep(2)
+        s = _source()
+        s.subscribe("000001", "1h")
+        for _ in range(3):
+>           bars = s.latest_snapshot(10)
+                   ^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_akshare_live.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pa_agent\data\akshare_source.py:276: in latest_snapshot
+    rows_asc = self._fetch_history(self._symbol, self._timeframe, fetch_n)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pa_agent.data.akshare_source.AkShareSource object at 0x000001632EA21350>
+symbol = '000001', timeframe = '1h', n = 30
+
+    def _fetch_history(self, symbol: str, timeframe: str, n: int) -> list[dict[str, Any]]:
+        try:
+            if timeframe == "1d":
+                return self._fetch_daily_ak(symbol, n)
+            if timeframe == "1h":
+                return self._fetch_minute_ak(symbol, "60", n)
+            if timeframe == "4h":
+                rows_60 = self._fetch_minute_ak(symbol, "60", n * 4 + 8)
+                return _resample_rows_to_4h(rows_60)[-n:]
+        except Exception as exc:
+            logger.warning("AkShare 主源失败 (%s): %s", symbol, exc)
+            if self._baostock_ok:
+                try:
+                    return self._fetch_history_baostock(symbol, timeframe, n)
+                except Exception as bs_exc:
+                    logger.warning("Baostock 备用源失败 (%s): %s", symbol, bs_exc)
+                    raise DataSourceTransientError(
+                        f"AkShare 与 Baostock 均失败: {exc}; 备用: {bs_exc}"
+                    ) from bs_exc
+>           raise DataSourceTransientError(f"AkShare 拉取失败: {exc}") from exc
+E           pa_agent.data.base.DataSourceTransientError: AkShare 拉取失败: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+pa_agent\data\akshare_source.py:354: DataSourceTransientError
+------------------------------ Captured log call ------------------------------
+WARNING  pa_agent.data.akshare_source:akshare_source.py:345 AkShare 主源失败 (000001): ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+_________________ test_orchestrator_passes_through_prediction _________________
+
+frame = KlineFrame(symbol='XAUUSD', timeframe='1h', bars=(KlineBar(seq=1, ts_open=1000, open=2038.0, high=2048.0, low=2028.0, ....0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0)), snapshot_ts_local_ms=1700000000000)
+pending_writer = <MagicMock id='1525495810432'>
+assembler = <MagicMock id='1525495819840'>
+exp_reader = <MagicMock id='1526593714704'>
+
+    def test_orchestrator_passes_through_prediction(
+        frame, pending_writer, assembler, exp_reader
+    ):
+        """AI returns prediction ? record.stage2_decision contains it (R1.1)."""
+        client = MagicMock()
+        stage2_with_pred = _make_stage2_with_prediction(_PREDICTION_BULLISH)
+        client.stream_chat.side_effect = [
+            make_reply(VALID_STAGE1),
+            make_reply(stage2_with_pred),
+        ]
+    
+        validator = schema_test_validator()
+        orchestrator = TwoStageOrchestrator(
+            client=client,
+            assembler=assembler,
+            router=route_strategy_files,
+            validator=validator,
+            pending_writer=pending_writer,
+            exp_reader=exp_reader,
+        )
+    
+        record = orchestrator.submit(
+            frame=frame,
+            cancel_token=CancelToken(),
+            on_event=lambda e: None,
+        )
+    
+        pred = record.stage2_decision.get("next_bar_prediction")
+>       assert isinstance(pred, dict), f"Expected dict, got {type(pred)}"
+E       AssertionError: Expected dict, got <class 'NoneType'>
+E       assert False
+E        +  where False = isinstance(None, dict)
+
+tests\integration\test_next_bar_prediction.py:111: AssertionError
+__________________________ test_save_full_round_trip __________________________
+
+frame = KlineFrame(symbol='XAUUSD', timeframe='1h', bars=(KlineBar(seq=1, ts_open=1000, open=2038.0, high=2048.0, low=2028.0, ....0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0)), snapshot_ts_local_ms=1700000000000)
+pending_writer = <MagicMock id='1526592547072'>
+assembler = <MagicMock id='1526592544048'>
+exp_reader = <MagicMock id='1526592549088'>
+
+    def test_save_full_round_trip(
+        frame, pending_writer, assembler, exp_reader
+    ):
+        """Write ? reload ? prediction fields preserved (R9.4)."""
+        client = MagicMock()
+        client.stream_chat.side_effect = [
+            make_reply(VALID_STAGE1),
+            make_reply(_make_stage2_with_prediction(_PREDICTION_BULLISH)),
+        ]
+    
+        validator = schema_test_validator()
+        orchestrator = TwoStageOrchestrator(
+            client=client,
+            assembler=assembler,
+            router=route_strategy_files,
+            validator=validator,
+            pending_writer=pending_writer,
+            exp_reader=exp_reader,
+        )
+    
+        record = orchestrator.submit(frame=frame, cancel_token=CancelToken(), on_event=lambda e: None)
+    
+        # Verify saved record has the prediction
+        saved = pending_writer.save_full.call_args[0][0]
+        pred = saved.stage2_decision.get("next_bar_prediction")
+>       assert pred is not None
+E       assert None is not None
+
+tests\integration\test_next_bar_prediction.py:231: AssertionError
+__________ TestSwitchMidAnalysis.test_worker_cancelled_within_100ms ___________
+
+self = <tests.integration.test_switch_mid_analysis.TestSwitchMidAnalysis object at 0x0000016319032710>
+qtbot = <pytestqt.qtbot.QtBot object at 0x0000016370C20830>
+app_ctx = AppContext(settings=None, logger=<Logger pa_agent (WARNING)>, event_bus=None, data_source=<MagicMock id='1526605155024...000163700F3150>, pending_writer=<MagicMock id='1526605154688'>, exp_reader=<MagicMock id='1526603741376'>, ledger=None)
+pending_writer = <MagicMock id='1526605154688'>
+mock_data_source = <MagicMock id='1526605155024'>
+
+    def test_worker_cancelled_within_100ms(
+        self, qtbot, app_ctx, pending_writer, mock_data_source
+    ):
+        """Switching symbol while stage-2 is running cancels the worker quickly."""
+        from pa_agent.gui.main_window import MainWindow
+    
+        # Build a slow mock client: stage1 returns immediately, stage2 blocks
+        # until the cancel token is set.
+        cancel_token_holder: list[CancelToken] = []
+        stage2_started_event = __import__("threading").Event()
+    
+        def slow_stage2_chat(messages, **kwargs):
+            ct: CancelToken = kwargs.get("cancel_token")
+            if ct is not None:
+                cancel_token_holder.append(ct)
+            stage2_started_event.set()
+            # Block until cancelled (simulates a long-running API call)
+            if ct is not None:
+                ct.wait(timeout=10.0)
+            return _make_reply(VALID_STAGE2)
+    
+        mock_client = MagicMock()
+        mock_client.stream_chat.side_effect = [
+            _make_reply(VALID_STAGE1),  # stage1 returns immediately
+            slow_stage2_chat,           # stage2 blocks
+        ]
+    
+        # Patch chat to use side_effect properly
+        call_count = [0]
+    
+        def chat_dispatch(messages, **kwargs):
+            idx = call_count[0]
+            call_count[0] += 1
+            if idx == 0:
+                return _make_reply(VALID_STAGE1)
+            else:
+                return slow_stage2_chat(messages, **kwargs)
+    
+        mock_client.stream_chat.side_effect = chat_dispatch
+    
+        # Wire up the orchestrator components
+        from tests.fixtures.validators import schema_test_validator
+        from pa_agent.ai.router import route_strategy_files
+    
+        app_ctx.client = mock_client
+        app_ctx.assembler = MagicMock()
+        app_ctx.assembler.build_stage1.return_value = [{"role": "system", "content": "s1"}]
+        app_ctx.assembler.build_stage2.return_value = [{"role": "system", "content": "s2"}]
+        app_ctx.router = route_strategy_files
+        app_ctx.validator = schema_test_validator()
+        app_ctx.exp_reader = MagicMock()
+        app_ctx.exp_reader.read_top5.return_value = []
+    
+        window = MainWindow(ctx=app_ctx)
+>       qtbot.addWidget(window)
+
+tests\integration\test_switch_mid_analysis.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pytestqt.qtbot.QtBot object at 0x0000016370C20830>
+widget = <pa_agent.gui.main_window.MainWindow object at 0x000001636FFD0C30>
+
+    def addWidget(
+        self, widget: QWidget, *, before_close_func: Optional[BeforeCloseFunc] = None
+    ) -> None:
+        """
+        Adds a widget to be tracked by this bot. This is not required, but will ensure that the
+        widget gets closed by the end of the test, so it is highly recommended.
+    
+        :param QWidget widget:
+            Widget to keep track of.
+    
+        :kwparam before_close_func:
+            A function that receives the widget as single parameter, which is called just before
+            the ``.close()`` method gets called.
+    
+        .. note:: This method is also available as ``add_widget`` (pep-8 alias)
+        """
+        if not isinstance(widget, qt_api.QtWidgets.QWidget):
+>           raise TypeError(f"Need to pass a QWidget to addWidget: {widget!r}")
+E           TypeError: Need to pass a QWidget to addWidget: <pa_agent.gui.main_window.MainWindow object at 0x000001636FFD0C30>
+
+C:\Program Files\Python313\Lib\site-packages\pytestqt\qtbot.py:221: TypeError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: Failed to register window class "Qt6111ThemeChangeObserverWindow" ( "类已存在。" )
+______ TestSwitchMidAnalysis.test_save_partial_called_with_user_switched ______
+
+self = <tests.integration.test_switch_mid_analysis.TestSwitchMidAnalysis object at 0x0000016319032850>
+qtbot = <pytestqt.qtbot.QtBot object at 0x0000016370CFF750>
+app_ctx = AppContext(settings=None, logger=<Logger pa_agent (WARNING)>, event_bus=None, data_source=<MagicMock id='1524955295632...00016370B97950>, pending_writer=<MagicMock id='1526605154016'>, exp_reader=<MagicMock id='1524955298320'>, ledger=None)
+pending_writer = <MagicMock id='1526605154016'>
+
+    def test_save_partial_called_with_user_switched(
+        self, qtbot, app_ctx, pending_writer
+    ):
+        """save_partial must be called with reason='user_switched' on symbol switch."""
+        from pa_agent.gui.main_window import MainWindow, _AnalysisWorker
+        from tests.fixtures.validators import schema_test_validator
+        from pa_agent.ai.router import route_strategy_files
+        from pa_agent.orchestrator.two_stage import TwoStageOrchestrator
+    
+        stage2_started = __import__("threading").Event()
+        call_count = [0]
+    
+        def chat_dispatch(messages, **kwargs):
+            idx = call_count[0]
+            call_count[0] += 1
+            if idx == 0:
+                return _make_reply(VALID_STAGE1)
+            else:
+                ct = kwargs.get("cancel_token")
+                stage2_started.set()
+                if ct is not None:
+                    ct.wait(timeout=10.0)
+                return _make_reply(VALID_STAGE2)
+    
+        mock_client = MagicMock()
+        mock_client.stream_chat.side_effect = chat_dispatch
+    
+        app_ctx.client = mock_client
+        app_ctx.assembler = MagicMock()
+        app_ctx.assembler.build_stage1.return_value = [{"role": "system", "content": "s1"}]
+        app_ctx.assembler.build_stage2.return_value = [{"role": "system", "content": "s2"}]
+        app_ctx.router = route_strategy_files
+        app_ctx.validator = schema_test_validator()
+        app_ctx.exp_reader = MagicMock()
+        app_ctx.exp_reader.read_top5.return_value = []
+    
+        window = MainWindow(ctx=app_ctx)
+>       qtbot.addWidget(window)
+
+tests\integration\test_switch_mid_analysis.py:247: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pytestqt.qtbot.QtBot object at 0x0000016370CFF750>
+widget = <pa_agent.gui.main_window.MainWindow object at 0x000001630E73F1B0>
+
+    def addWidget(
+        self, widget: QWidget, *, before_close_func: Optional[BeforeCloseFunc] = None
+    ) -> None:
+        """
+        Adds a widget to be tracked by this bot. This is not required, but will ensure that the
+        widget gets closed by the end of the test, so it is highly recommended.
+    
+        :param QWidget widget:
+            Widget to keep track of.
+    
+        :kwparam before_close_func:
+            A function that receives the widget as single parameter, which is called just before
+            the ``.close()`` method gets called.
+    
+        .. note:: This method is also available as ``add_widget`` (pep-8 alias)
+        """
+        if not isinstance(widget, qt_api.QtWidgets.QWidget):
+>           raise TypeError(f"Need to pass a QWidget to addWidget: {widget!r}")
+E           TypeError: Need to pass a QWidget to addWidget: <pa_agent.gui.main_window.MainWindow object at 0x000001630E73F1B0>
+
+C:\Program Files\Python313\Lib\site-packages\pytestqt\qtbot.py:221: TypeError
+_____ TestSwitchMidAnalysis.test_free_chat_session_disabled_after_switch ______
+
+self = <tests.integration.test_switch_mid_analysis.TestSwitchMidAnalysis object at 0x0000016318D5F230>
+qtbot = <pytestqt.qtbot.QtBot object at 0x0000016370CFFED0>
+app_ctx = AppContext(settings=None, logger=<Logger pa_agent (WARNING)>, event_bus=None, data_source=<MagicMock id='1524956187680...sembler=None, router=None, validator=None, pending_writer=<MagicMock id='1524956187344'>, exp_reader=None, ledger=None)
+pending_writer = <MagicMock id='1524956187344'>
+
+    def test_free_chat_session_disabled_after_switch(
+        self, qtbot, app_ctx, pending_writer
+    ):
+        """FreeChatSession must be None and Tab2 input disabled after symbol switch."""
+        from pa_agent.gui.main_window import MainWindow
+    
+        window = MainWindow(ctx=app_ctx)
+>       qtbot.addWidget(window)
+
+tests\integration\test_switch_mid_analysis.py:307: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pytestqt.qtbot.QtBot object at 0x0000016370CFFED0>
+widget = <pa_agent.gui.main_window.MainWindow object at 0x000001630E85CF50>
+
+    def addWidget(
+        self, widget: QWidget, *, before_close_func: Optional[BeforeCloseFunc] = None
+    ) -> None:
+        """
+        Adds a widget to be tracked by this bot. This is not required, but will ensure that the
+        widget gets closed by the end of the test, so it is highly recommended.
+    
+        :param QWidget widget:
+            Widget to keep track of.
+    
+        :kwparam before_close_func:
+            A function that receives the widget as single parameter, which is called just before
+            the ``.close()`` method gets called.
+    
+        .. note:: This method is also available as ``add_widget`` (pep-8 alias)
+        """
+        if not isinstance(widget, qt_api.QtWidgets.QWidget):
+>           raise TypeError(f"Need to pass a QWidget to addWidget: {widget!r}")
+E           TypeError: Need to pass a QWidget to addWidget: <pa_agent.gui.main_window.MainWindow object at 0x000001630E85CF50>
+
+C:\Program Files\Python313\Lib\site-packages\pytestqt\qtbot.py:221: TypeError
+__________ TestSwitchMidAnalysis.test_cancel_token_set_within_100ms ___________
+
+self = <tests.integration.test_switch_mid_analysis.TestSwitchMidAnalysis object at 0x0000016318D5F360>
+qtbot = <pytestqt.qtbot.QtBot object at 0x000001630E6E1940>
+app_ctx = AppContext(settings=None, logger=<Logger pa_agent (WARNING)>, event_bus=None, data_source=<MagicMock id='1524955296640...00016370C76E40>, pending_writer=<MagicMock id='1526605154016'>, exp_reader=<MagicMock id='1524955297984'>, ledger=None)
+pending_writer = <MagicMock id='1526605154016'>
+
+    def test_cancel_token_set_within_100ms(
+        self, qtbot, app_ctx, pending_writer
+    ):
+        """cancel_token.is_set() must become True within 100ms of triggering switch."""
+        from pa_agent.gui.main_window import MainWindow, _AnalysisWorker
+        from tests.fixtures.validators import schema_test_validator
+        from pa_agent.ai.router import route_strategy_files
+        from pa_agent.orchestrator.two_stage import TwoStageOrchestrator
+    
+        stage2_started = __import__("threading").Event()
+        call_count = [0]
+    
+        def chat_dispatch(messages, **kwargs):
+            idx = call_count[0]
+            call_count[0] += 1
+            if idx == 0:
+                return _make_reply(VALID_STAGE1)
+            else:
+                ct = kwargs.get("cancel_token")
+                stage2_started.set()
+                if ct is not None:
+                    ct.wait(timeout=10.0)
+                return _make_reply(VALID_STAGE2)
+    
+        mock_client = MagicMock()
+        mock_client.stream_chat.side_effect = chat_dispatch
+    
+        app_ctx.client = mock_client
+        app_ctx.assembler = MagicMock()
+        app_ctx.assembler.build_stage1.return_value = [{"role": "system", "content": "s1"}]
+        app_ctx.assembler.build_stage2.return_value = [{"role": "system", "content": "s2"}]
+        app_ctx.router = route_strategy_files
+        app_ctx.validator = schema_test_validator()
+        app_ctx.exp_reader = MagicMock()
+        app_ctx.exp_reader.read_top5.return_value = []
+    
+        window = MainWindow(ctx=app_ctx)
+>       qtbot.addWidget(window)
+
+tests\integration\test_switch_mid_analysis.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pytestqt.qtbot.QtBot object at 0x000001630E6E1940>
+widget = <pa_agent.gui.main_window.MainWindow object at 0x000001630E8739D0>
+
+    def addWidget(
+        self, widget: QWidget, *, before_close_func: Optional[BeforeCloseFunc] = None
+    ) -> None:
+        """
+        Adds a widget to be tracked by this bot. This is not required, but will ensure that the
+        widget gets closed by the end of the test, so it is highly recommended.
+    
+        :param QWidget widget:
+            Widget to keep track of.
+    
+        :kwparam before_close_func:
+            A function that receives the widget as single parameter, which is called just before
+            the ``.close()`` method gets called.
+    
+        .. note:: This method is also available as ``add_widget`` (pep-8 alias)
+        """
+        if not isinstance(widget, qt_api.QtWidgets.QWidget):
+>           raise TypeError(f"Need to pass a QWidget to addWidget: {widget!r}")
+E           TypeError: Need to pass a QWidget to addWidget: <pa_agent.gui.main_window.MainWindow object at 0x000001630E8739D0>
+
+C:\Program Files\Python313\Lib\site-packages\pytestqt\qtbot.py:221: TypeError
+_______________ test_no_order_with_non_null_price_fails_stage2 ________________
+
+frame = KlineFrame(symbol='XAUUSD', timeframe='1h', bars=(KlineBar(seq=1, ts_open=1000, open=2038.0, high=2048.0, low=2028.0, ....0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0)), snapshot_ts_local_ms=1700000000000)
+pending_writer = <MagicMock id='1524956198768'>
+assembler = <MagicMock id='1524956199104'>
+exp_reader = <MagicMock id='1524956200448'>
+
+    def test_no_order_with_non_null_price_fails_stage2(
+        frame, pending_writer, assembler, exp_reader,
+    ) -> None:
+        bad_s2 = copy.deepcopy(VALID_STAGE2)
+        bad_s2["decision"]["order_type"] = "不下单"
+        bad_s2["decision"]["entry_price"] = 0
+    
+        client = MagicMock()
+        client.stream_chat.side_effect = [
+            make_reply(VALID_STAGE1),
+            make_reply(bad_s2),
+        ]
+    
+        orchestrator = TwoStageOrchestrator(
+            client=client,
+            assembler=assembler,
+            router=route_strategy_files,
+            validator=schema_test_validator(),
+            pending_writer=pending_writer,
+            exp_reader=exp_reader,
+        )
+    
+        events: list[OrchestratorEvent] = []
+        record = orchestrator.submit(
+            frame=frame,
+            cancel_token=CancelToken(),
+            on_event=events.append,
+        )
+    
+>       assert OrchestratorEvent.Stage2Failed in events
+E       assert <OrchestratorEvent.Stage2Failed: 8> in [<OrchestratorEvent.Stage1Started: 1>, <OrchestratorEvent.Stage1Done: 3>, <OrchestratorEvent.Stage2Started: 5>, <OrchestratorEvent.Stage2Done: 7>, <OrchestratorEvent.RecordSaved: 9>]
+E        +  where <OrchestratorEvent.Stage2Failed: 8> = OrchestratorEvent.Stage2Failed
+
+tests\integration\test_two_stage_no_order_with_prices.py:44: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_akshare_live.py::test_live_stock_1h - pa_agent....
+FAILED tests/integration/test_akshare_live.py::test_live_stock_1d - pa_agent....
+FAILED tests/integration/test_akshare_live.py::test_live_stock_4h - pa_agent....
+FAILED tests/integration/test_akshare_live.py::test_live_three_snapshots_stable
+FAILED tests/integration/test_next_bar_prediction.py::test_orchestrator_passes_through_prediction
+FAILED tests/integration/test_next_bar_prediction.py::test_save_full_round_trip
+FAILED tests/integration/test_switch_mid_analysis.py::TestSwitchMidAnalysis::test_worker_cancelled_within_100ms
+FAILED tests/integration/test_switch_mid_analysis.py::TestSwitchMidAnalysis::test_save_partial_called_with_user_switched
+FAILED tests/integration/test_switch_mid_analysis.py::TestSwitchMidAnalysis::test_free_chat_session_disabled_after_switch
+FAILED tests/integration/test_switch_mid_analysis.py::TestSwitchMidAnalysis::test_cancel_token_set_within_100ms
+FAILED tests/integration/test_two_stage_no_order_with_prices.py::test_no_order_with_non_null_price_fails_stage2

@@ -1,0 +1,6 @@
+WARNING:pa_agent.orchestrator.two_stage:Stage 1 primary error (SenseNova fallback eligible): Injected primary network failure; free upstream remains real
+WARNING:pa_agent.orchestrator.two_stage:SenseNova free fallback triggered for stage1 (base_url eligible)
+INFO:httpx:HTTP Request: GET https://api.kilo.ai/api/gateway/models "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://api.kilo.ai/api/gateway/chat/completions "HTTP/1.1 200 OK"
+INFO:pa_agent.ai.sensenova_fallback:SenseNova free fallback success: provider=kilo model=inclusionai/ling-3.1-flash
+INFO:pa_agent.orchestrator.two_stage:next_bar_prediction direction=null probs=null/null/null unpredictable=true (gate short-circuit)
