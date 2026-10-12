@@ -18,7 +18,7 @@ class AIProviderSettings(BaseModel):
     api_key: str = ""
     api_key_encrypted: str = ""
     thinking: bool = True
-    reasoning_effort: Literal["low", "medium", "high", "max"] = "high"
+    reasoning_effort: Literal["low", "medium", "high", "max"] = "low"
     context_window: int = 2_000_000
 
 

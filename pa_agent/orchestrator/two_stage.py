@@ -1186,7 +1186,7 @@ class TwoStageOrchestrator:
     def _thinking_params(self) -> tuple[bool, str]:
         """Return (thinking, reasoning_effort) from settings defaults."""
         if self._settings is None:
-            return True, "high"
+            return True, "low"
         p = self._settings.provider
         return p.thinking, p.reasoning_effort
 
