@@ -1249,8 +1249,7 @@ class TwoStageOrchestrator:
             on_progress,
             f"[提示] {_STAGE_LABELS_ZH.get(stage, stage)}的主通道暂时不可用，"
             "已自动切换备用通道继续分析。\n"
-            "[提示] 备用通道可能较慢，最长需要几分钟；界面会停在这里但程序正在正常等待，"
-            "不是卡死，请勿关闭窗口。\n",
+            "[提示] 界面会显示当前处理进度，请稍候。\n",
         )
         self._last_sensenova_fallback_failure = None  # type: ignore[attr-defined]
         try:

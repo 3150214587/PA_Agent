@@ -139,7 +139,7 @@ def _free_ok(content_obj: dict) -> dict:
 
 
 def test_run_free_stage_fallback_reports_each_candidate():
-    """Rotation must narrate start / failure / success so the UI is never silent."""
+    """Rotation reports waiting and success, but keeps candidate failures internal."""
     import json as _json
 
     from pa_agent.ai.json_validator import Ok
@@ -174,7 +174,9 @@ def test_run_free_stage_fallback_reports_each_candidate():
     joined = "".join(lines)
     assert "第 1/2 次尝试" in joined
     assert "第 2/2 次尝试" in joined
-    assert "本次尝试未成功" in joined
+    assert "当前尝试未成功" not in joined
+    assert "当前结果未通过检查" not in joined
+    assert "正在继续处理" not in joined
     assert "校验通过" in joined
     assert "sk-SECRET" not in joined
     assert outcome.candidate.model == "second/free"
@@ -229,8 +231,43 @@ def test_progress_lines_never_advertise_the_free_lane():
         "[兜底]",
     ):
         assert forbidden not in joined, f"user-visible hint leaked {forbidden!r}: {joined}"
-    # The reason must still be conveyed, just neutrally.
-    assert "上游限流" in joined
+    # No technical failure cause is exposed; the UI only reports progress.
+    assert "当前尝试未成功" not in joined
+    assert "当前结果未通过检查" not in joined
+    assert "正在继续处理" not in joined
+    assert "429" not in joined
+    assert "限流" not in joined
+
+
+def test_validation_failure_stays_internal_and_rotation_continues():
+    from pa_agent.ai.json_validator import Ok, ValidationError
+    from pa_agent.ai.sensenova_fallback import FreeCandidate, run_free_stage_fallback
+    from tests.unit.test_sensenova_fallback import VALID_STAGE1
+
+    lines: list[str] = []
+    validations = iter([
+        ValidationError(category="a", stage="stage1", raw_text="bad", message="invalid result"),
+        Ok(obj=VALID_STAGE1),
+    ])
+    outcome = run_free_stage_fallback(
+        messages=[{"role": "user", "content": "stage1"}],
+        validate=lambda reply: next(validations),
+        primary_api_key=None,
+        candidates=[
+            FreeCandidate("kilo", "first/free", "https://api.kilo.ai/api/gateway"),
+            FreeCandidate("kilo", "second/free", "https://api.kilo.ai/api/gateway"),
+        ],
+        http_post=lambda url, **kwargs: (200, _free_ok(VALID_STAGE1)),
+        on_progress=lines.append,
+    )
+    joined = "".join(lines)
+    for unwanted in ("当前尝试未成功", "当前结果未通过检查", "正在继续处理", "invalid result"):
+        assert unwanted not in joined
+    assert "第 2/2 次尝试" in joined
+    assert "校验通过" in joined
+    assert outcome.candidate.model == "second/free"
+    assert not outcome.attempts[0].ok
+    assert "invalid result" in outcome.attempts[0].error
 
 
 def test_run_free_stage_fallback_reports_total_exhaustion():
@@ -299,8 +336,9 @@ def test_orchestrator_shows_progress_in_ui_during_fallback():
     assert record.exception is None
     assert "[提示]" in joined
     assert "正在等待备用通道" in joined
-    # The user must be told explicitly that the pause is not a freeze.
-    assert "不是卡死" in joined
+    assert "界面会显示当前处理进度，请稍候" in joined
+    for unwanted in ("备用通道可能较慢", "最长需要几分钟", "120秒", "上游限流", "限流"):
+        assert unwanted not in joined
     # The real answer must still be delivered after the hints.
     assert "cycle_position" in joined
     # Neutral wording only: never expose the lane or the upstream model.

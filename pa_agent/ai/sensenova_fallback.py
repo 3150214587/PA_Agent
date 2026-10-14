@@ -477,29 +477,6 @@ def _short_error(exc: BaseException, limit: int = 120) -> str:
     return text if len(text) <= limit else text[: limit - 1] + "…"
 
 
-def public_reason(exc: BaseException | str, candidate: "FreeCandidate | None" = None) -> str:
-    """User-facing failure reason with upstream provider/model names stripped.
-
-    The UI must never advertise which free lane answered (it reads as cheap and
-    is operationally irrelevant to the user); provider/model stay in the log and
-    in the saved record for diagnosis.
-    """
-    text = " ".join(str(exc or "").split())
-    if candidate is not None:
-        for needle in (candidate.model, candidate.base_url, candidate.provider):
-            if needle:
-                text = text.replace(str(needle), " ")
-    text = " ".join(text.split()).strip(" :-/")
-    low = text.lower()
-    if "429" in low or "rate limit" in low or "too many requests" in low:
-        return "上游限流"
-    if "timed out" in low or "timeout" in low:
-        return "响应超时"
-    if "http 5" in low or "server error" in low:
-        return "上游服务异常"
-    return text if len(text) <= 120 else text[:119] + "…"
-
-
 def run_free_stage_fallback(
     *,
     messages: list[dict[str, Any]],
@@ -591,11 +568,6 @@ def run_free_stage_fallback(
                 candidate.model,
                 exc,
             )
-            _progress(
-                "[提示] 本次尝试未成功"
-                + (f"：{public_reason(exc, candidate)}" if public_reason(exc, candidate) else "")
-                + f"（用时 {latency_ms / 1000:.1f} 秒），继续尝试下一次…\n"
-            )
             continue
 
         latency_ms = (time.monotonic() - t0) * 1000
@@ -649,10 +621,6 @@ def run_free_stage_fallback(
             candidate.provider,
             candidate.model,
             err_msg,
-        )
-        _progress(
-            f"[提示] 返回内容未通过校验：{public_reason(err_msg, candidate)}"
-            f"（用时 {latency_ms / 1000:.1f} 秒），继续尝试下一次…\n"
         )
 
     _progress(
