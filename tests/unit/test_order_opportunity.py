@@ -51,9 +51,13 @@ def test_play_order_alert_sound_uses_wav_on_windows(monkeypatch) -> None:
     played: list[str] = []
 
     class FakeWinsound:
+        # Must mirror every flag the production code references, otherwise the
+        # flag expression raises AttributeError and is silently swallowed by the
+        # try/except, falling through to MessageBeep.
         SND_FILENAME = 1
         SND_ALIAS = 2
         SND_NODEFAULT = 4
+        SND_ASYNC = 8
         MB_ICONEXCLAMATION = 48
 
         @staticmethod

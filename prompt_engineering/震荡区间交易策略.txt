@@ -1,6 +1,6 @@
-﻿【文件定位】本文件职责：在已确认震荡区间中，给出**顺 direction 一侧**边界入场的具体方案。在诊断结果为震荡区间（trading_range）或趋势型交易区间（trending_tr）时加载。
+【文件定位】本文件职责：在已确认震荡区间中，给出**顺 direction 一侧**边界入场的具体方案。在诊断结果为震荡区间（trading_range）或趋势型交易区间（trending_tr）时加载。
 
-⚠️ **PA Agent 硬约束**：禁止双边刮头皮、禁止逆势、禁止追高潮、禁止仓位管理、不依赖成交量。
+⚠️ **PA Agent 硬约束**：禁止双边刮头皮、禁止逆势、禁止追高潮、禁止仓位管理；成交量可作为**可选参考项**，非必要条件。
 
 ⚠️ 【trending_tr vs trading_range】
 | 特征 | trading_range | trending_tr |

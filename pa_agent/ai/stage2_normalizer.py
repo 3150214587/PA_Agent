@@ -412,6 +412,27 @@ def _normalize_stage2_enum_aliases(out: dict[str, Any]) -> bool:
             logger.debug("always_in %r -> %r", raw_ai, mapped_ai)
             changed = True
 
+        # entry_bar enums share the same alias tables as
+        # _normalize_stage2_bar_analysis_enums; normalising them here keeps this
+        # entry point self-contained (both passes are idempotent).
+        entry_bar = bar_analysis.get("entry_bar")
+        if isinstance(entry_bar, dict):
+            if _normalize_entry_bar_freshness(entry_bar):
+                logger.debug("entry_bar.freshness normalised via enum aliases")
+                changed = True
+            raw_strength = entry_bar.get("strength")
+            norm_strength = _normalize_closed_enum(
+                raw_strength,
+                _ENTRY_BAR_STRENGTH_ENUM,
+                aliases=_ENTRY_BAR_STRENGTH_ALIASES,
+            )
+            if norm_strength and norm_strength != raw_strength:
+                entry_bar["strength"] = norm_strength
+                logger.debug(
+                    "entry_bar.strength %r -> %r", raw_strength, norm_strength
+                )
+                changed = True
+
     terminal = out.get("terminal")
     if isinstance(terminal, dict):
         raw_outcome = terminal.get("outcome")
@@ -1582,15 +1603,18 @@ def normalize_stage2(
 
         if adjust_decision_stop_for_tp1_rr_cap(decision, kline_frame=kline_frame):
             logger.debug("stop_loss widened to bring TP1 RR within program cap")
+    # Planned-limit trace fixes must run BEFORE the trade-metrics coercion:
+    # coercion replaces order_type with 不下单, which makes is_planned_limit_order()
+    # return False and silently disables the §9.0 / §9.0P upgrades below.
+    if _fix_background_limit_trace(out):
+        logger.debug("Ensured §9.0P for background planned limit order")
+    if _fix_9_0_for_planned_limit(out):
+        logger.debug("Upgraded §9.0 to 是 for planned limit order")
     _coerce_decision_when_trade_metrics_fail(
         out,
         decision_stance=decision_stance,
         kline_frame=kline_frame,
     )
-    if _fix_background_limit_trace(out):
-        logger.debug("Ensured §9.0P for background planned limit order")
-    if _fix_9_0_for_planned_limit(out):
-        logger.debug("Upgraded §9.0 to 是 for planned limit order")
 
     # ── DecisionNodeEngine: fill §9.1/§9.2/§9.3/§9.5/§11 ─────────────────────
     if kline_frame is not None:

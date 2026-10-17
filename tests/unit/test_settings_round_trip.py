@@ -15,7 +15,9 @@ def test_defaults(tmp_path):
     assert s.provider.model == "deepseek-v4-flash"
     assert s.provider.base_url == "https://api.deepseek.com"
     assert s.provider.thinking is True
-    assert s.provider.reasoning_effort == "high"
+    # Default is "low" (settings.py: ProviderSettings.reasoning_effort) —
+    # conservative cost/latency default for first-run users.
+    assert s.provider.reasoning_effort == "low"
     assert s.provider.context_window == 2_000_000
     assert s.general.analysis_bar_count == 100
     # 默认数据源为 MT5, 默认品种为现货黄金 XAUUSDm

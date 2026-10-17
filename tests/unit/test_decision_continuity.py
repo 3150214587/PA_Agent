@@ -19,8 +19,10 @@ from pa_agent.data.base import KlineBar, KlineFrame, IndicatorBundle
 
 
 def _ms(iso: str) -> int:
-    # Treat local ISO as UTC in tests; only deltas matter.
-    dt = datetime.strptime(iso, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
+    # Records store *local* wall-clock ISO strings (see _build_empty_record,
+    # which uses datetime.fromtimestamp -> naive local).  Parse the same way the
+    # production _parse_local_iso_ms does: naive -> .timestamp() uses local tz.
+    dt = datetime.strptime(iso, "%Y-%m-%d %H:%M:%S")
     return int(dt.timestamp() * 1000)
 
 
@@ -235,7 +237,10 @@ def test_render_prompt_mentions_neutral_ais():
 
 def test_audit_relation_flip_label():
     prev = {
-        "record_time": "2026-06-22 22:49:07",
+        # Keep record_time near the frame snapshot (1 bar apart): a multi-day
+        # gap would exceed max_pending_bars and auto-cancel the resting limit,
+        # masking the flip classification this test is checking.
+        "record_time": "2026-06-30 14:20:00",
         "order_direction": "做空",
         "order_type": "限价单",
         "entry_price": "4196.79",
@@ -270,9 +275,11 @@ def test_build_continuity_context_auto_cancels_after_3_bars_unfilled_limit():
                 "decision": {
                     "order_direction": "做多",
                     "order_type": "限价单",
-                    "entry_price": 5000.0,  # not touched by _frame() low
-                    "stop_loss_price": 4980.0,
-                    "take_profit_price": 5050.0,
+                    # Long limit must rest BELOW market to stay unfilled:
+                    # _frame() low=4190, so 4185 is genuinely untouched.
+                    "entry_price": 4185.0,
+                    "stop_loss_price": 4170.0,
+                    "take_profit_price": 4230.0,
                 }
             },
         },
@@ -295,9 +302,9 @@ def test_build_continuity_context_auto_cancels_on_cycle_change_unfilled_limit():
                 "decision": {
                     "order_direction": "做多",
                     "order_type": "限价单",
-                    "entry_price": 5000.0,
-                    "stop_loss_price": 4980.0,
-                    "take_profit_price": 5050.0,
+                    "entry_price": 4185.0,
+                    "stop_loss_price": 4170.0,
+                    "take_profit_price": 4230.0,
                 }
             },
         },
@@ -319,9 +326,11 @@ def test_build_continuity_context_auto_cancels_on_direction_change_unfilled_limi
                 "decision": {
                     "order_direction": "做多",
                     "order_type": "限价单",
-                    "entry_price": 7459.05,
-                    "stop_loss_price": 7454.13,
-                    "take_profit_price": 7466.42,
+                    # Long limit must rest BELOW market: _frame() low=4190,
+                    # so a 7459 entry would already be "triggered".
+                    "entry_price": 4185.0,
+                    "stop_loss_price": 4170.0,
+                    "take_profit_price": 4230.0,
                 }
             },
         },

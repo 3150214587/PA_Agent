@@ -73,6 +73,12 @@ EMA_SLOPE_LOOKBACK: int = 10            # EMA slope lookback bars
 DIRECTION_BULL_THRESHOLD: int = 3
 DIRECTION_BEAR_THRESHOLD: int = -3
 
+# EMA-slope dead-zone (×ATR): slope smaller than this counts as flat / no signal.
+# 与 §1.3 的 CHAOS_EMA_FLAT_ATR_RATIO 同值，保持"平坦"判定一致。
+DIRECTION_EMA_SLOPE_ATR_RATIO: float = 0.05
+# Close-gravity dead-zone (×ATR): near/far weighted-close diff smaller than this → no signal.
+DIRECTION_COG_ATR_RATIO: float = 0.1
+
 # Trend-bar dominance: bull_trend_bars / bear_trend_bars ratio to earn ±1
 TREND_BAR_DOMINANCE_RATIO: float = 1.5
 # Overlap: mean overlap_prev_ratio below this → low overlap → trend signal
@@ -733,7 +739,7 @@ def judge_direction(frame: Any) -> tuple[str, NodeFill]:
                 d = float(ema20[0]) - float(ema20[k])
                 thr = 0.0
                 if atr14 and len(atr14) >= 1 and not math.isnan(float(atr14[0])):
-                    thr = 0.05 * float(atr14[0])
+                    thr = DIRECTION_EMA_SLOPE_ATR_RATIO * float(atr14[0])
                 if d > thr:
                     s1 = 1
                     s1_desc = f"EMA斜率:+1(d={d:.4f}>thr={thr:.4f})"
@@ -774,7 +780,7 @@ def judge_direction(frame: Any) -> tuple[str, NodeFill]:
                 diff = near - far
                 thr2 = 0.0
                 if atr14 and len(atr14) >= 1 and not math.isnan(float(atr14[0])):
-                    thr2 = 0.1 * float(atr14[0])
+                    thr2 = DIRECTION_COG_ATR_RATIO * float(atr14[0])
                 if diff > thr2:
                     s2 = 1
                     s2_desc = f"收盘重心(加权):+1(diff={diff:.4f}>thr={thr2:.4f})"
@@ -915,7 +921,7 @@ def judge_direction(frame: Any) -> tuple[str, NodeFill]:
                 diff_m = near_m - far_m
                 thr_m = 0.0
                 if atr14 and len(atr14) >= 1 and not math.isnan(float(atr14[0])):
-                    thr_m = 0.1 * float(atr14[0])
+                    thr_m = DIRECTION_COG_ATR_RATIO * float(atr14[0])
                 if diff_m > thr_m:
                     med_confirm = 1
                     med_confirm_desc = (
@@ -1091,7 +1097,7 @@ def _eval_always_in_gates(
                 d = float(ema20[0]) - float(ema20[k])
                 thr = 0.0
                 if atr14 and len(atr14) >= 1 and not math.isnan(float(atr14[0])):
-                    thr = 0.05 * float(atr14[0])
+                    thr = DIRECTION_EMA_SLOPE_ATR_RATIO * float(atr14[0])
                 if d > thr:
                     slope_sign = 1
                     slope_desc = f"EMA斜率向上(d={d:.4f}>thr={thr:.4f})"
@@ -2835,6 +2841,14 @@ class DecisionNodeEngine:
 
         )
 
+        # Diagnostic only: record which program nodes the AI overrode.
+        try:
+            from pa_agent.ai.node_coverage import build_node_coverage
+
+            out["node_coverage"] = build_node_coverage(program_nodes, final_nodes)
+        except Exception:  # noqa: BLE001
+            pass
+
 
 
         # Step 5: Merge into gate_trace
@@ -3058,6 +3072,14 @@ class DecisionNodeEngine:
             stage="stage2",
 
         )
+
+        # Diagnostic only: record which program nodes the AI overrode.
+        try:
+            from pa_agent.ai.node_coverage import build_node_coverage
+
+            out["node_coverage"] = build_node_coverage(program_nodes, final_nodes)
+        except Exception:  # noqa: BLE001
+            pass
 
 
 
