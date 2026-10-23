@@ -44,7 +44,6 @@ _WORKBUDDY_API_PATH = "/v2"
 
 def is_workbuddy_route(provider: Any) -> bool:
     """True when provider targets WorkBuddy / CodeBuddy copilot API."""
-    from pa_agent.ai.cursor_connector import is_openclaw_cs_model
     from pa_agent.ai.qclaw_connector import is_openclaw_model
     from pa_agent.ai.qoder_connector import is_openclaw_qc_model
     from pa_agent.ai.trae_connector import is_openclaw_twc_model
@@ -52,7 +51,6 @@ def is_workbuddy_route(provider: Any) -> bool:
     model = str(getattr(provider, "model", "") or "").strip().lower()
     if (
         is_openclaw_model(model)
-        or is_openclaw_cs_model(model)
         or is_openclaw_twc_model(model)
         or is_openclaw_qc_model(model)
     ):
@@ -141,7 +139,6 @@ def should_use_workbuddy_provider(
     base_url: str | None = None,
 ) -> bool:
     """True when settings Save should auto-configure from WorkBuddy."""
-    from pa_agent.ai.cursor_connector import is_openclaw_cs_model
     from pa_agent.ai.qclaw_connector import is_openclaw_model
     from pa_agent.ai.qoder_connector import is_openclaw_qc_model
     from pa_agent.ai.trae_connector import is_openclaw_twc_model
@@ -150,7 +147,6 @@ def should_use_workbuddy_provider(
     # even if a stale base_url still points at copilot.tencent.com.
     if (
         is_openclaw_model(model)
-        or is_openclaw_cs_model(model)
         or is_openclaw_twc_model(model)
         or is_openclaw_qc_model(model)
     ):
@@ -524,7 +520,6 @@ def apply_workbuddy_provider_to_settings(
 
     Returns None on success, or a user-facing error string.
     """
-    from pa_agent.ai.cursor_connector import is_openclaw_cs_model
     from pa_agent.ai.qclaw_connector import is_openclaw_model
 
     model_hint = (preferred_model or getattr(settings.provider, "model", "") or "").strip()
@@ -532,11 +527,6 @@ def apply_workbuddy_provider_to_settings(
         return (
             "模型 openclaw 属于 QClaw 路由，不应走 WorkBuddy。\n\n"
             "请在设置中将模型填 openclaw 并保存，程序会自动配置本地 QClaw Gateway。"
-        )
-    if is_openclaw_cs_model(model_hint):
-        return (
-            "模型 openclaw_cs 属于 Cursor 订阅路由，不应走 WorkBuddy。\n\n"
-            "请在设置中将模型填 openclaw_cs 并保存。"
         )
 
     if not detect_workbuddy():

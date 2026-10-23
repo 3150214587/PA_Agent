@@ -219,7 +219,6 @@ def should_use_trae_cn_provider(
     base_url: str | None = None,
 ) -> bool:
     """True when settings Save should auto-configure from TRAE Work CN."""
-    from pa_agent.ai.cursor_connector import is_openclaw_cs_model
     from pa_agent.ai.qclaw_connector import is_openclaw_model
     from pa_agent.ai.qoder_connector import is_openclaw_qc_model
     from pa_agent.ai.workbuddy_connector import is_openclaw_wb_model
@@ -227,7 +226,6 @@ def should_use_trae_cn_provider(
     # Other openclaw routes take precedence.
     if (
         is_openclaw_model(model)
-        or is_openclaw_cs_model(model)
         or is_openclaw_wb_model(model)
         or is_openclaw_qc_model(model)
     ):
@@ -247,14 +245,12 @@ def is_trae_cn_route(provider: Any) -> bool:
     model = str(getattr(provider, "model", "") or "").strip().lower()
     if is_openclaw_twc_model(model):
         return True
-    from pa_agent.ai.cursor_connector import is_openclaw_cs_model
     from pa_agent.ai.qclaw_connector import is_openclaw_model
     from pa_agent.ai.qoder_connector import is_openclaw_qc_model
     from pa_agent.ai.workbuddy_connector import is_openclaw_wb_model
 
     if (
         is_openclaw_model(model)
-        or is_openclaw_cs_model(model)
         or is_openclaw_wb_model(model)
         or is_openclaw_qc_model(model)
     ):
@@ -550,15 +546,12 @@ def apply_trae_cn_provider_to_settings(
 
     Returns None on success, or a user-facing error string.
     """
-    from pa_agent.ai.cursor_connector import is_openclaw_cs_model
     from pa_agent.ai.qclaw_connector import is_openclaw_model
     from pa_agent.ai.workbuddy_connector import is_openclaw_wb_model
 
     model_hint = (preferred_model or getattr(settings.provider, "model", "") or "").strip()
     if is_openclaw_model(model_hint):
         return "模型 openclaw 属于 QClaw 路由，不应走 TRAE Work CN。"
-    if is_openclaw_cs_model(model_hint):
-        return "模型 openclaw_cs 属于 Cursor 订阅路由，不应走 TRAE Work CN。"
     if is_openclaw_wb_model(model_hint):
         return "模型 openclaw_wb 属于 WorkBuddy 路由，不应走 TRAE Work CN。"
 

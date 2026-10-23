@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-from pa_agent.ai.cursor_connector import apply_cursor_provider_to_settings
 from pa_agent.ai.qclaw_connector import apply_qclaw_provider_to_settings
 from pa_agent.ai.workbuddy_connector import apply_workbuddy_provider_to_settings
 from pa_agent.config.settings import Settings
@@ -147,33 +146,4 @@ def test_openclaw_wb_on_load_keeps_submodel_from_settings() -> None:
     assert s.provider.model == "openclaw_wb/deepseek-v4-flash"
 
 
-def test_openclaw_cs_clears_base_url_and_keeps_user_key() -> None:
-    """openclaw_cs is the Cursor SDK route: base_url is cleared, user key kept.
-
-    The route no longer goes through qclaw — apply_cursor_provider_to_settings
-    validates the key locally and blanks base_url so nothing implies an
-    OpenAI-compatible endpoint.
-    """
-    s = Settings()
-    s.provider.model = "openclaw_cs"
-    s.provider.base_url = "https://example.com/v1"
-    s.provider.api_key = "crsr_user_key"
-
-    err = apply_cursor_provider_to_settings(s, preferred_model="openclaw_cs")
-    assert err is None
-
-    assert s.provider.model == "openclaw_cs"
-    assert s.provider.base_url == ""
-    assert s.provider.api_key == "crsr_user_key"
-
-
-def test_openclaw_cs_requires_api_key() -> None:
-    """Missing key must surface a user-facing error and not raise."""
-    s = Settings()
-    s.provider.model = "openclaw_cs"
-    s.provider.api_key = ""
-
-    err = apply_cursor_provider_to_settings(s, preferred_model="openclaw_cs")
-    assert err is not None
-    assert "API Key" in err
 

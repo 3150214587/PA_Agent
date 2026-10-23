@@ -81,24 +81,23 @@ def _is_deepseek_native(base_url: str) -> bool:
 
 
 def _is_deepseek_model(model: str) -> bool:
-    """True for DeepSeek model ids; excludes QClaw/WorkBuddy/Cursor/TRAE/Qoder Agent aliases."""
+    """True for DeepSeek model ids; excludes QClaw/WorkBuddy/TRAE/Qoder Agent aliases."""
     m = (model or "").lower()
-    if m in ("openclaw", "openclaw_wb", "openclaw_cs", "openclaw_twc", "openclaw_qc"):
+    if m in ("openclaw", "openclaw_wb", "openclaw_twc", "openclaw_qc"):
         return False
-    if m.startswith("openclaw/") or m.startswith("openclaw_wb/") or m.startswith("openclaw_cs/") or m.startswith("openclaw_twc/") or m.startswith("openclaw_qc/"):
+    if m.startswith("openclaw/") or m.startswith("openclaw_wb/") or m.startswith("openclaw_twc/") or m.startswith("openclaw_qc/"):
         return False
     return "deepseek" in m
 
 
 def _is_qclaw_openclaw_agent(settings: AIProviderSettings) -> bool:
     """True when requests go through QClaw's public-gateway OpenClaw Agent."""
-    from pa_agent.ai.cursor_connector import is_openclaw_cs_model
     from pa_agent.ai.qclaw_connector import detect_qclaw, is_openclaw_model
 
     if not detect_qclaw():
         return False
     model = settings.model or ""
-    return is_openclaw_model(model) or is_openclaw_cs_model(model)
+    return is_openclaw_model(model)
 
 
 def _openclaw_agent_request_extra(settings: AIProviderSettings) -> dict[str, Any]:
@@ -116,13 +115,12 @@ def _is_workbuddy_agent(settings: AIProviderSettings) -> bool:
 
 
 def _is_openclaw_agent_model(model: str) -> bool:
-    """True for QClaw/WorkBuddy/Cursor/TRAE/Qoder OpenClaw Agent model aliases."""
+    """True for QClaw/WorkBuddy/TRAE/Qoder OpenClaw Agent model aliases."""
     m = (model or "").lower()
     return (
-        m in ("openclaw", "openclaw_wb", "openclaw_cs", "openclaw_twc", "openclaw_qc")
+        m in ("openclaw", "openclaw_wb", "openclaw_twc", "openclaw_qc")
         or m.startswith("openclaw/")
         or m.startswith("openclaw_wb/")
-        or m.startswith("openclaw_cs/")
         or m.startswith("openclaw_twc/")
         or m.startswith("openclaw_qc/")
     )
@@ -709,15 +707,9 @@ class DeepSeekClient:
         if cancel_token is not None and cancel_token.is_set():
             raise CancelledError("Request cancelled before API call")
 
-        from pa_agent.ai.cursor_connector import is_openclaw_cs_model
         from pa_agent.ai.qoder_connector import is_openclaw_qc_model
         from pa_agent.ai.trae_connector import is_openclaw_twc_model
 
-        if is_openclaw_cs_model(self._settings.model):
-            raise RuntimeError(
-                "模型 openclaw_cs 必须使用 Cursor SDK 路由，但当前仍在使用 DeepSeekClient。"
-                "请在「AI 模型」设置中重新保存，或重启应用后再分析。"
-            )
         if is_openclaw_twc_model(self._settings.model):
             raise RuntimeError(
                 "模型 openclaw_twc 必须使用 TRAE Work CN 路由，但当前仍在使用 DeepSeekClient。"
